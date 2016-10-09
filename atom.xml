@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>覃业博的个人博客</title>
+  
+  <link href="//atom.xml" rel="self"/>
+  
+  <link href="http://qinyebo.com/"/>
+  <updated>2016-10-09T13:33:03.000Z</updated>
+  <id>http://qinyebo.com/</id>
+  
+  <author>
+    <name>覃业博</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>NodeJS中的异步IO是怎么来的</title>
+    <link href="http://qinyebo.com/2016/10/09/NodeJS%E4%B8%AD%E7%9A%84%E5%BC%82%E6%AD%A5IO%E6%98%AF%E6%80%8E%E4%B9%88%E6%9D%A5%E7%9A%84/"/>
+    <id>http://qinyebo.com/2016/10/09/NodeJS中的异步IO是怎么来的/</id>
+    <published>2016-10-09T13:31:22.000Z</published>
+    <updated>2016-10-09T13:33:03.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="传统同步IO"><a href="#传统同步IO" class="headerlink" title="传统同步IO"></a>传统同步IO</h2><p>传统同步IO会阻塞当前线程后续所有代码的执行，等IO请求完成后才会交还当前线程的执行权</p>
+<h2 id="传统异步IO"><a href="#传统异步IO" class="headerlink" title="传统异步IO"></a>传统异步IO</h2><p>异步IO则是在一个线程下发起一个IO请求，然后再不断的去询问它完成没有或者等待它完成，完成了则返回一个文件描述符，然后再通过这个文件描述符将数据取回来。这种异步IO虽然可以在前一个询问与下一个询问的间隙执行一些当前线程的任务，但这种轮询询问也是很耗费CPU资源与浪费当前线程的时间的。</p>
+<h2 id="理想中的异步IO"><a href="#理想中的异步IO" class="headerlink" title="理想中的异步IO"></a>理想中的异步IO</h2><p>当前线程发起一个IO请求，并带上一个回调函数过去，然后当前线程转而去处理其它事情，等请求完成后，回调函数被调起，数据经由回调函数被传入进来。</p>
+<h2 id="如何实现像理想中的异步IO一样的效果"><a href="#如何实现像理想中的异步IO一样的效果" class="headerlink" title="如何实现像理想中的异步IO一样的效果"></a>如何实现像理想中的异步IO一样的效果</h2><p>当前线程只负责发起请求，然后当前线程去处理其它任务，由另一个线程去等待请求完成，按照传统异步IO的方式去做，然后请求完成后这个IO线程再通知主线程，并将数据传给主线程。</p>
+<h2 id="NodeJS中如何实现理想中的异步IO"><a href="#NodeJS中如何实现理想中的异步IO" class="headerlink" title="NodeJS中如何实现理想中的异步IO"></a>NodeJS中如何实现理想中的异步IO</h2><p>主线程发起一个IO请求，IO线程收到后将此请求插入IO线程池，等待执行，执行IO请求的IO线程通过libuv调用不同平台的IO请求处理者发起真正的IO请求，按照传统异步IO的方式完成IO请求后，因为Node中有个事件循环的东西，事件循环有个IO观察者，这个IO观察者会循环查询线程池中是否有执行完的请求，如果有，则把相应请求对象放入一个事件队列，那个IO线程则重归线程池，然后主线程在其执行的间隙，会查询事件队列中是否有待执行的事件，如果有，则排队依次执行，执行的过程就是调起主线程之前订阅好的回调函数，同时将请求对象里的数据塞入回调函数，回调函数得到执行，主线程得以收到响应数据。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>Javascript虽然是单线程的，但浏览器和Node是多线程的，所以得以有机会实现理想中的异步IO，其它语言也能实现这种理想中的异步IO，只不过在Javascript中的IO线程所占的CPU资源少，所以高并发无压力。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;传统同步IO&quot;&gt;&lt;a href=&quot;#传统同步IO&quot; class=&quot;headerlink&quot; title=&quot;传统同步IO&quot;&gt;&lt;/a&gt;传统同步IO&lt;/h2&gt;&lt;p&gt;传统同步IO会阻塞当前线程后续所有代码的执行，等IO请求完成后才会交还当前线程的执行权&lt;/p&gt;
+&lt;h2 id
+    
+    </summary>
+    
+      <category term="Web开发" scheme="http://qinyebo.com/categories/Web%E5%BC%80%E5%8F%91/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>移动端高清多屏适配</title>
+    <link href="http://qinyebo.com/2016/10/09/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E9%AB%98%E6%B8%85%E5%A4%9A%E5%B1%8F%E9%80%82%E9%85%8D/"/>
+    <id>http://qinyebo.com/2016/10/09/移动端高清多屏适配/</id>
+    <published>2016-10-09T13:29:19.000Z</published>
+    <updated>2016-10-09T13:33:31.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>移动端的适配问题分两类，一类是高清适配，一类是布局适配</p>
+<p>高清适配解决的是1px问题，布局适配解决的是元素在不同设备上的布局问题</p>
+<h2 id="1px问题"><a href="#1px问题" class="headerlink" title="1px问题"></a>1px问题</h2><h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案 :"></a>解决方案 :</h4><ol>
+<li>自定义背景图linear-gradient模拟</li>
+<li>border-image模拟</li>
+<li>box-shadow模拟</li>
+<li>transform:scale缩放</li>
+<li>ios8以上支持0.5px</li>
+<li>倍数px加viewport缩放法 : initial-scale:0.5或其它值 + 二倍或多倍CSS像素</li>
+<li>面向px加viewport缩放法 : initial-scale:0.5或其它值 + meta头指定width=理想视口宽度二倍或多倍</li>
+</ol>
+<h2 id="布局适配问题"><a href="#布局适配问题" class="headerlink" title="布局适配问题"></a>布局适配问题</h2><p>布局适配问题是独立于1px问题的，就是只考虑布局，假设1px问题已经OK</p>
+<h4 id="解决方案-1"><a href="#解决方案-1" class="headerlink" title="解决方案"></a>解决方案</h4><ol>
+<li>百分比 + 固定像素</li>
+<li>flexbox + 固定像素 / flexbox + rem</li>
+<li>纯REM =&gt; 宽度rem + 高度auto / 定高</li>
+<li>固定宽度 + 动态viewport法(1px问题基于面向px加viewport缩放法)</li>
+<li>rem宽度 + 动态viewport法(1px问题基于倍数px加viewport缩放法，只不过这个倍数px是由rem计算出来的)</li>
+</ol>
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><p>跟淘宝flexible的原理一样，viewport动态去生成，让CSS像素和物理像素一致，解决1px问题，然后这时元素应该放大相应的倍数让它和没有缩小viewport时的大小一致，这个px倍数的放大手动去管理显然不合适，所以就用rem去管理。这样既能在多端做到布局适配，也解决了1px问题。</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://github.com/riskers/blog/issues/17" target="_blank" rel="external">https://github.com/riskers/blog/issues/17</a><br><a href="https://github.com/riskers/blog/issues/18" target="_blank" rel="external">https://github.com/riskers/blog/issues/18</a><br><a href="http://efe.baidu.com/blog/1px-on-retina/" target="_blank" rel="external">http://efe.baidu.com/blog/1px-on-retina/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;移动端的适配问题分两类，一类是高清适配，一类是布局适配&lt;/p&gt;
+&lt;p&gt;高清适配解决的是1px问题，布局适配解决的是元素在不同设备上的布局问题&lt;/p&gt;
+&lt;h2 id=&quot;1px问题&quot;&gt;&lt;a href=&quot;#1px问题&quot; class=&quot;headerlink&quot; title=&quot;1px问
+    
+    </summary>
+    
+      <category term="Web开发" scheme="http://qinyebo.com/categories/Web%E5%BC%80%E5%8F%91/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>无线端性能优化</title>
+    <link href="http://qinyebo.com/2016/10/09/%E6%97%A0%E7%BA%BF%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"/>
+    <id>http://qinyebo.com/2016/10/09/无线端性能优化/</id>
+    <published>2016-10-09T13:26:03.000Z</published>
+    <updated>2016-10-09T13:30:58.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>无线是个资源比较宝贵的终端，有些在pc端性能问题表现得不明显的，在无线端就会表现得很明显了，因此无线端性能方面可优化的地方还是很多的。</p>
+<p>这里将归纳所有性能优化的方法，因此首先先说更加属于无线端的性能优化点，然后再说pc和无线通用的一些性能优化的点。</p>
+<p>无线端的性能优化，无非做到下面几点:</p>
+<ul>
+<li>渲染效率上的优化</li>
+<li>http层的优化</li>
+<li>javascript执行效率的优化</li>
+<li>图片优化</li>
+<li>对用户感知的优化</li>
+</ul>
+<h2 id="渲染效率上的优化"><a href="#渲染效率上的优化" class="headerlink" title="渲染效率上的优化"></a>渲染效率上的优化</h2><p>元素展现出来是有一个过程的，分为如下几步 :</p>
+<ol>
+<li>解析html，生成DOM树</li>
+<li>解析CSS，生成CSSom树</li>
+<li>结合DOM树和CSSom树，形成呈现树</li>
+<li>对元素进行布局</li>
+<li>绘制元素到位图（渲染层）中</li>
+<li>同步位图到合成器</li>
+<li>将GPU现有位图进行合成</li>
+<li>上传合成层到GPU内存中去</li>
+<li>GPU将合成层渲染到屏幕上</li>
+</ol>
+<p>这个过程中，有几个地方可以优化</p>
+<h3 id="一-布局的开销"><a href="#一-布局的开销" class="headerlink" title="一. 布局的开销"></a>一. 布局的开销</h3><p>布局的过程也是有些性能问题的，不同的情况下有不同的问题，也对应有不同的解决方法</p>
+<h4 id="减少重排的次数，使用flexbox进行布局"><a href="#减少重排的次数，使用flexbox进行布局" class="headerlink" title="减少重排的次数，使用flexbox进行布局"></a>减少重排的次数，使用flexbox进行布局</h4><p>布局带来的性能开销其实不可忽略，首先是layout阶段，将元素的布局模型全都建立好后，然后还得经过绘制那个流程，然后再得将绘制后的位图同步到合成器，进入GPU内存，接下来GPU才能将位图渲染到屏幕上。可以看到这个过程还是挺长的，而传统的float布局，则是会重排一次才能全部就位的，CSS3的flexbox是一个比较好的选择，因为它无论是横向还是竖向的排版都是根据flexbox的自然流来的，没有重排过程。</p>
+<h4 id="将元素渲染层提升为合成层"><a href="#将元素渲染层提升为合成层" class="headerlink" title="将元素渲染层提升为合成层"></a>将元素渲染层提升为合成层</h4><p>将元素渲染层提升为一个合成层，对合成层进行动画操作是不需要经过layout、paint、建立渲染层、将渲染层传送至合成线程这一过程的，因此比操作非合成层高效，新的渲染层不一定是合成层，只有满足一定条件才能称之为是一个合成层，见<a href="http://mwpo.taobao.net/render/composite.html的&quot;从" target="_blank" rel="external">http://mwpo.taobao.net/render/composite.html的&quot;从</a> PaintLayers 到 GraphicsLayers”部分。</p>
+<p>将元素的渲染层提升为合成层之后，会带来如下性能上的提升 :</p>
+<ol>
+<li>对合成层做动画，因为中间环节少，直接就是GPU对合成层的变换操作，因此效率高</li>
+<li>当需要绘制时，只会影响到合成层元素本身，不会影响到其它元素。</li>
+<li>对于 transform 和 opacity 效果，不会触发 layout 和 paint</li>
+<li>对于诸如 fixed 的合成层，移动时不会触发 repaint</li>
+</ol>
+<p>从上面所带来的好处也可以看出，减少布局开销，这里也包含了一条法则 : <strong>尽量使用transform和opacity做动画，同时结合will-change属性</strong></p>
+<p>同时也要注意要合理规划合成层的数量，避免GPU过载，反而影响性能。</p>
+<h4 id="避免强制性的布局结果的计算"><a href="#避免强制性的布局结果的计算" class="headerlink" title="避免强制性的布局结果的计算"></a>避免强制性的布局结果的计算</h4><ul>
+<li>读取下面这些属性会引发重排 :</li>
+</ul>
+<p>clientHeight, clientLeft, clientTop, clientWidth, focus(), getBoundingClientRect(), getClientRects(), innerText, offsetHeight, offsetLeft, offsetParent, offsetTop, offsetWidth, outerText, scrollByLines(), scrollByPages(), scrollHeight, scrollIntoView(), scrollIntoViewIfNeeded(), scrollLeft, scrollTop, scrollWidth</p>
+<p>这样一来，就会经过一个完整的CPU到GPU的那个过程，代价略高</p>
+<ul>
+<li>改变一个元素的某些属性后，再去读取位置、大小相关值时也会触发重排，因为当你改变它的属性后，浏览器为了保证能拿到正确的结果就得去重排一下，以获得最新的值。</li>
+</ul>
+<h3 id="二-绘制的开销"><a href="#二-绘制的开销" class="headerlink" title="二. 绘制的开销"></a>二. 绘制的开销</h3><p>绘制跟布局一样，还是有和合成线程通信的开销，如果能避免这个开销，是最好的。paint在所有过程中也是代价最高的一步，因此优化好paint的性能，至关重要。</p>
+<p>以下方法可以提高绘制的性能 :</p>
+<ol>
+<li>避免在触发paint时先触发了layout，因为layout了，就会paint</li>
+<li>提升元素渲染层为合成层</li>
+<li>使用transform和opacity + will-change或3dtransform来实现动画</li>
+<li>降低绘制复杂度</li>
+</ol>
+<h2 id="http层的优化"><a href="#http层的优化" class="headerlink" title="http层的优化"></a>http层的优化</h2><ul>
+<li>DNS优化<ul>
+<li>缩短DNS请求路径，使用httpDNS</li>
+<li>在利用并发的同时，合理减少DNS查询数</li>
+</ul>
+</li>
+<li>将一些长期不变的静态资源缓存到cdn</li>
+<li>添加Etag或Expire，缓存Ajax。利用本地缓存</li>
+<li>减少cookie传输，将存放静态资源的域名与页面的域名分开，避免静态资源的域名上携带上页面的cookie，增加不必要的传输</li>
+<li>合并http请求，在服务端完成前端静态资源的打包，同时合理利用并发特性，保留合理的请求数。</li>
+<li>压缩javascript、css文件，启用gzip</li>
+<li>按需加载，不需要用时先不加载</li>
+<li>避免重定向</li>
+<li>预加载策略</li>
+<li>避免坏请求，比如空的img src</li>
+<li>利用iframe做加载优化，将第三方广告之类的资源放入iframe中加载，不过这样得手动的去触发主页面的load事件，因为iframe里资源的加载会阻塞主页面load事件的执行。</li>
+<li>首屏相关CSS、js内嵌</li>
+<li>通过media query加载资源</li>
+</ul>
+<h2 id="javascript执行效率的优化"><a href="#javascript执行效率的优化" class="headerlink" title="javascript执行效率的优化"></a>javascript执行效率的优化</h2><h3 id="一-使用requestAnimationFrame"><a href="#一-使用requestAnimationFrame" class="headerlink" title="一. 使用requestAnimationFrame"></a>一. 使用requestAnimationFrame</h3><p>把耗时的操作放在requestAnimationFrame中，这个函数能保证动画每一帧运行的时机</p>
+<h3 id="二-将耗时的操作放入setTimeout中去执行"><a href="#二-将耗时的操作放入setTimeout中去执行" class="headerlink" title="二. 将耗时的操作放入setTimeout中去执行"></a>二. 将耗时的操作放入setTimeout中去执行</h3><p>把耗时、且又不是立即需要的的操作分段执行，每次线程间隙运行一点</p>
+<h3 id="三-将复杂操作放入web-worker中去运行"><a href="#三-将复杂操作放入web-worker中去运行" class="headerlink" title="三. 将复杂操作放入web worker中去运行"></a>三. 将复杂操作放入web worker中去运行</h3><p>web worker跟异步io一样，会创建一个单独的线程</p>
+<h3 id="四-使用事件代理"><a href="#四-使用事件代理" class="headerlink" title="四. 使用事件代理"></a>四. 使用事件代理</h3><p>使用事件代理能减少一些内存的消耗，避免了过多的事件绑定占用内存</p>
+<h3 id="五-输入事件处理函数去抖动"><a href="#五-输入事件处理函数去抖动" class="headerlink" title="五. 输入事件处理函数去抖动"></a>五. 输入事件处理函数去抖动</h3><p>在发生touchmove之类的输入事件时，不注意的话也会发生一些性能问题，主要有以下几点需注意</p>
+<ol>
+<li>输入事件回调函数中避免耗时过长的计算，让计算能在一帧内完成</li>
+<li>避免在输入事件处理函数中操作样式属性，这样后面如果有读取大小、位置等信息时，就会发生重绘或重排，输入事件的频率又高，所以性能代价往往不小</li>
+<li>让某些计算在requestAnimationFrame的回调函数中执行</li>
+</ol>
+<h2 id="图片优化"><a href="#图片优化" class="headerlink" title="图片优化"></a>图片优化</h2><ul>
+<li>使用webp图片格式</li>
+<li>图片或字体文件较小时使用base64编码</li>
+<li>合理使用雪碧图</li>
+<li>锐化图片。在图片质量过低时配合锐化，能起到比较好的视觉效果，低质量图片大小更小，加载更快。</li>
+<li>根据屏幕不同，输出不同大小和尺寸的图片</li>
+<li>根据网络带宽不同，输出不同大小和尺寸的图片</li>
+</ul>
+<h2 id="对用户感知的优化"><a href="#对用户感知的优化" class="headerlink" title="对用户感知的优化"></a>对用户感知的优化</h2><p><strong>首屏渲染优化</strong><br><strong>滚屏流畅</strong><br><strong>使用动画缓解用户等待焦虑感</strong></p>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录 :"></a>附录 :</h2><hr>
+<p>渲染层和合成层概念是不同的，渲染层是合成层的子集，以下情况会为元素创建新的渲染层 :</p>
+<ul>
+<li><p>NormalPaintLayer</p>
+<ul>
+<li>根元素（HTML）</li>
+<li>有明确的定位属性（relative、fixed、sticky、absolute）</li>
+<li>透明的（opacity 小于 1）</li>
+<li>有 CSS 滤镜（fliter）</li>
+<li>有 CSS mask 属性</li>
+<li>有 CSS mix-blend-mode 属性（不为 normal）</li>
+<li>有 CSS transform 属性（不为 none）</li>
+<li>backface-visibility 属性为 hidden</li>
+<li>有 CSS reflection 属性</li>
+<li>有 CSS column-count 属性（不为 auto）或者 有 CSS column-width 属性（不为 auto）</li>
+<li>当前有对于 opacity、transform、fliter、backdrop-filter 应用动画</li>
+</ul>
+</li>
+<li><p>OverflowClipPaintLayer</p>
+<ul>
+<li>overflow 不为 visible</li>
+<li>NoPaintLayer</li>
+</ul>
+</li>
+</ul>
+<p>不需要 paint 的 PaintLayer，比如一个没有视觉属性（背景、颜色、阴影等）的空 div。<br>注：其中 NormalPaintLayer 被认为是 SelfPaintingLayer。</p>
+<p>满足以上条件的 LayoutObject 会拥有独立的渲染层，而其他的 LayoutObject 则和其第一个拥有渲染层的父元素共用一个</p>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;无线是个资源比较宝贵的终端，有些在pc端性能问题表现得不明显的，在无线端就会表现得很明显了，因此无线端性能方面可优化的地方还是很多的。&lt;/p&gt;
+&lt;p&gt;这里将归纳所有性能优化的方法，因此首先先说更加属于无线端的性能优化点，然后再说pc和无线通用的一些性能优化的点。&lt;/p&gt;
+&lt;
+    
+    </summary>
+    
+      <category term="Web开发" scheme="http://qinyebo.com/categories/Web%E5%BC%80%E5%8F%91/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>解读CSS布局之-水平垂直居中</title>
+    <link href="http://qinyebo.com/2016/10/09/%E8%A7%A3%E8%AF%BBCSS%E5%B8%83%E5%B1%80%E4%B9%8B-%E6%B0%B4%E5%B9%B3%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD/"/>
+    <id>http://qinyebo.com/2016/10/09/解读CSS布局之-水平垂直居中/</id>
+    <published>2016-10-09T13:24:18.000Z</published>
+    <updated>2016-10-09T13:33:30.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>对一个元素水平垂直居中，在我们的工作中是会经常遇到的，也是CSS布局中很重要的一部分，本文就来讲讲CSS水平垂直居中的一些方法。另外，文中的css都是用less书写的，如果看不懂less，可以把我给的demo链接打开，然后在控制台中查看最终的css，或者是点击codepen上的“View Compiled”按钮，可以查看编译后的css</p>
+<p>先看一张图，这是去年cssConf大会时阿里的 @寒冬winter 老师放出来的：</p>
+<p><img src="http://img.souche.com/20160316/png/75f94274a6a7095538eb10cbd18eb4a8.png" alt="alt"></p>
+<p>如图所示，CSS布局是可以分为几大块的：    </p>
+<ul>
+<li>盒子内部的布局<ul>
+<li>文本的布局</li>
+<li>盒模型本身的布局</li>
+</ul>
+</li>
+<li>盒子之间的布局visual formatting<ul>
+<li>脱离正常流normal flow的盒子的布局<ul>
+<li>absolute布局上下文下的布局</li>
+<li>float布局上下文下的布局</li>
+</ul>
+</li>
+<li>正常流normal flow下的盒子的布局<ul>
+<li>BFC布局上下文下的布局</li>
+<li>IFC布局上下文下的布局</li>
+<li>FFC布局上下文下的布局</li>
+<li>table布局上下文下的布局</li>
+<li>css grid布局上下文下的布局</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>所有的CSS布局其实都是围绕着这些布局模块来的，水平垂直居中也一样。</p>
+<h4 id="一-文本的水平垂直居中"><a href="#一-文本的水平垂直居中" class="headerlink" title="一. 文本的水平垂直居中"></a>一. 文本的水平垂直居中</h4><p><strong>line-height + text-align:center</strong></p>
+<p><a href="http://codepen.io/Dudy/pen/aOKWWO?editors=110" target="_blank" rel="external">DEMO链接</a></p>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&apos;wrap&apos;&gt;</div><div class="line">  水平垂直居中水平垂直居中</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">html,body&#123;</div><div class="line">  margin: 0;</div><div class="line">&#125;</div><div class="line"></div><div class="line">.wrap&#123;</div><div class="line">  line-height: 400px;</div><div class="line">  text-align:center;</div><div class="line"></div><div class="line">  height: 400px;</div><div class="line">  font-size: 36px;</div><div class="line">  background-color: #ccc;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这种方法只适合单行文字的水平垂直居中</p>
+<h4 id="二-利用盒模型的水平垂直居中"><a href="#二-利用盒模型的水平垂直居中" class="headerlink" title="二. 利用盒模型的水平垂直居中"></a>二. 利用盒模型的水平垂直居中</h4><p>我们一般讲的盒模型都是说的块级盒的盒模型，也只有块级盒的盒模型用得多一点，块级盒block-level box又是分别由content-box、padding-box、border-box、margin-box组成的，如下图：</p>
+<p><img src="http://img.souche.com/20160316/png/93a4055545278d504a8add63bc0883bf.png" alt="Alt text"></p>
+<p>也就说我任一个子盒子的水平和垂直方向的边与最外面盒子的间距都是可以控制的，因此也就有如下居中方法：</p>
+<p><strong>padding填充</strong></p>
+<p><a href="http://codepen.io/Dudy/pen/EjRvgp?editors=110" target="_blank" rel="external">DEMO链接</a></p>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;wrap&quot;&gt;</div><div class="line">  &lt;div class=&quot;content&quot;&gt;&lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">@wrapWidth : 400px;</div><div class="line"></div><div class="line">.wrap&#123;</div><div class="line">  margin-left: auto;</div><div class="line">  margin-right: auto;</div><div class="line">  margin-top: 20px;</div><div class="line">  width: @wrapWidth;</div><div class="line">  height: @wrapWidth;</div><div class="line">  background-color: #ccc;</div><div class="line">&#125;</div><div class="line"></div><div class="line">.content&#123;</div><div class="line">  @contentWidth : 100px;</div><div class="line">  width: @contentWidth;</div><div class="line">  height: @contentWidth;</div><div class="line">  padding: (@wrapWidth - @contentWidth) / 2;</div><div class="line">  background-color: #333;</div><div class="line">  background-clip:content-box;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>也可以用css3的calc()动态计算:</p>
+<p><a href="http://codepen.io/Dudy/pen/RPJZVw?editors=110" target="_blank" rel="external">DEMO链接</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;wrap&quot;&gt;</div><div class="line">  &lt;div class=&quot;content&quot;&gt;&lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">.wrap&#123;</div><div class="line">  margin-top: 20px;</div><div class="line">  margin-left: auto;</div><div class="line">  margin-right: auto;</div><div class="line">  width: 400px;</div><div class="line">  height: 400px;</div><div class="line">  background-color: #ccc;</div><div class="line">  .content&#123;</div><div class="line">    padding: -webkit-calc(~&quot;(100% - 100px) / 2&quot;);</div><div class="line">    padding: calc(~&quot;(100% - 100px) / 2&quot;);</div><div class="line">    width: 100px;</div><div class="line">    height: 100px;</div><div class="line">    background-color: #333;</div><div class="line">    background-clip: content-box;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注意这里我在calc中使用了一个~””的写法，这是less中的一个语法，告诉less这里不被less所编译，要是被less编译了的话，css的calc函数的参数就不是100% - 100px，而是0%了。</p>
+<p><strong>margin填充</strong></p>
+<p><a href="http://codepen.io/Dudy/pen/jPKxYL?editors=110" target="_blank" rel="external">DEMO链接</a></p>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;wrap&quot;&gt;</div><div class="line">  &lt;div class=&quot;ele&quot;&gt;&lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">.wrap&#123;</div><div class="line">  @wrapHeight : 400px;</div><div class="line">  @contenHeight : 100px;</div><div class="line">  overflow: hidden;</div><div class="line">  width: 100%;</div><div class="line">  height: @wrapHeight;</div><div class="line">  background-color: #ccc;</div><div class="line">  .ele&#123;</div><div class="line">    margin-left: auto;</div><div class="line">    margin-right: auto;</div><div class="line">    margin-top: (@wrapHeight - @contenHeight) / 2;</div><div class="line">    width: 100px;</div><div class="line">    height: @contenHeight;</div><div class="line">    background-color: #333;</div><div class="line">    color: #fff;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用margin填充我们需要知道元素的宽度，这点不太灵活，不过CSS3搞出了一个加fit-content的属性值，可以动态计算元素的宽度，<a href="http://codepen.io/Dudy/pen/yNEZVQ" target="_blank" rel="external">DEMO链接</a></p>
+<p>使用盒模型进行布局不会产生reflow，兼容也好，使用盒模型布局是一种布局思想，其实仅仅靠它就能实现很多visual formatting才能实现的布局，这是另一个话题，这里不展开。</p>
+<h4 id="三-absolute布局上下文下的水平垂直居中"><a href="#三-absolute布局上下文下的水平垂直居中" class="headerlink" title="三. absolute布局上下文下的水平垂直居中"></a>三. absolute布局上下文下的水平垂直居中</h4><p><strong>50% + -50%</strong></p>
+<p>原理很简单，就是利用left：50%将盒子的左边先置于父容器的中点，然后再将盒子往左偏移盒子自身宽度的50%，这里有三种具体实现：</p>
+<p><a href="http://codepen.io/Dudy/pen/VLdzRv?editors=110" target="_blank" rel="external">DEMO链接</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;wrap&quot;&gt;</div><div class="line">  &lt;div class=&quot;ele margin&quot;&gt;水平垂直居中水平垂直&lt;br&gt;居中水平垂直居中水平&lt;br&gt;垂直居中水平垂直居&lt;br&gt;中水平垂直居中&lt;/div&gt;</div><div class="line">&lt;/div&gt;</div><div class="line"></div><div class="line">&lt;div class=&quot;wrap&quot;&gt;</div><div class="line">  &lt;div class=&quot;ele translate&quot;&gt;水平垂直居中水平垂直&lt;br&gt;居中水平垂直居中水平&lt;br&gt;垂直居中水平垂直居&lt;br&gt;中水平垂直居中&lt;/div&gt;</div><div class="line">&lt;/div&gt;</div><div class="line"></div><div class="line">&lt;div class=&quot;wrap&quot;&gt;</div><div class="line">  &lt;div class=&quot;ele relative&quot;&gt;</div><div class="line">    &lt;div class=&quot;ele-inner&quot;&gt;水平垂直居中水平垂直&lt;br&gt;居中水平垂直居中水平&lt;br&gt;垂直居中水平垂直居&lt;br&gt;中水平垂直居中&lt;/div&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">.wrap&#123;</div><div class="line">  position: relative;</div><div class="line">  width: 100%;</div><div class="line">  height: 200px;</div><div class="line">  border:1px solid;</div><div class="line">  background-color: #ccc;</div><div class="line">  .ele&#123;</div><div class="line">    position: absolute;</div><div class="line">    left: 50%;</div><div class="line">    top: 50%;</div><div class="line">    background-color: #333;</div><div class="line">    &amp;.margin&#123;</div><div class="line">      width: 160px;</div><div class="line">      height: 100px;</div><div class="line">      margin-left: -80px;</div><div class="line">      margin-top: -50px;</div><div class="line">    &#125;</div><div class="line">    &amp;.translate&#123;</div><div class="line">      -webkit-transform:translate3d(-50%, -50%, 0);</div><div class="line">      transform:translate3d(-50%, -50%, 0);</div><div class="line">    &#125;</div><div class="line">    .ele-inner&#123;</div><div class="line">      position: relative;</div><div class="line">      left: -50%;</div><div class="line">      top: -50%;</div><div class="line">      width: 100%;</div><div class="line">      height: 100%;</div><div class="line">      background-color: #333;</div><div class="line">    &#125;</div><div class="line">    &amp;.relative&#123;</div><div class="line">      width: 150px;</div><div class="line">      height: 100px;</div><div class="line">      background-color: transparent;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面三个方法中，margin方法和relative方法都需要知道元素的宽高才行(relative方法只知道高也行)，适用于固定式布局，而transform方法则可以不知道元素宽高</p>
+<p><strong>text-align:center + absolute</strong></p>
+<p>text-aign:center本来是不能直接作用于absolute元素的，但是没有给其left等值的行级absolute元素是会受文本的影响的，可以参考张老师的<a href="http://www.zhangxinxu.com/wordpress/2011/12/position-absolute-text-align-center/" target="_blank" rel="external">这篇文章</a></p>
+<p><a href="http://codepen.io/Dudy/pen/BNVwJx?editors=110" target="_blank" rel="external">DEMO链接</a></p>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;wrap&quot;&gt;</div><div class="line">  &lt;div class=&quot;ele&quot;&gt;&lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">.wrap&#123;</div><div class="line">  text-align: center;</div><div class="line"></div><div class="line">  width: 100%;</div><div class="line">  height: 400px;</div><div class="line">  background-color: #ccc;</div><div class="line">  font-size: 0;</div><div class="line">&#125;</div><div class="line">.ele&#123;</div><div class="line">  position: absolute;</div><div class="line">  margin-left: -(100px / 2);</div><div class="line">  margin-top: (400px - 100px) / 2;</div><div class="line"></div><div class="line">  width: 100px;</div><div class="line">  height: 100px;</div><div class="line">  display: inline-block;</div><div class="line">  background-color: #333;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>简单解释下，首先，text-align:center作用的是文本而不是absolute的元素，但是，当absolute元素为inline-block的时候，它会受到文本的影响，然后你可能会问这里没文本啊，我只能告诉你说这下面是有的，是个匿名的文本节点。具体的这里不展开，可以参考<a href="http://www.w3.org/TR/CSS2/visudet.html#propdef-line-height" target="_blank" rel="external">标准</a>，然后理解这句话:</p>
+<blockquote>
+<p>If the inline box contains no glyphs at all, it is considered to contain a strut (an invisible glyph of zero width) with the A and D of the element’s first available font</p>
+</blockquote>
+<p>然后这个匿名文本由于受到text-align:center影响居中了，这个时候absolute盒子的左边跟父容器的中点对齐了，所以就还需要往回拉50%，这里用的是margin-left，你也可以用其它方式拉。然后就是垂直方向的对齐，垂直方向是不能被操作文本的属性影响的，所以我这里用的是margin-top来让它偏移下去。</p>
+<p><strong>absolute + margin : auto</strong></p>
+<p><a href="http://codepen.io/Dudy/pen/mJKqXa?editors=110" target="_blank" rel="external">DEMO链接</a></p>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;wrap&quot;&gt;</div><div class="line">  &lt;div class=&quot;ele&quot;&gt;&lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">html,body&#123;</div><div class="line">  width: 100%;</div><div class="line">  height: 100%;</div><div class="line">  margin: 0;</div><div class="line">&#125;</div><div class="line">.wrap&#123;</div><div class="line">  position: relative;</div><div class="line">  width: 100%;</div><div class="line">  height: 100%;</div><div class="line">  background-color: #ccc;</div><div class="line">  .ele&#123;</div><div class="line">    position: absolute;</div><div class="line">    left: 0;</div><div class="line">    right: 0;</div><div class="line">    top: 0;</div><div class="line">    bottom: 0;</div><div class="line">    margin: auto;</div><div class="line">    width: 100px;</div><div class="line">    height: 100px;</div><div class="line">    background-color: #333;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>关于这种布局的原理，在标准中能找到如下解释：</p>
+<p><a href="http://www.w3.org/TR/CSS21/visudet.html#abs-non-replaced-width" target="_blank" rel="external">w3c.org</a>中有这样一句话：</p>
+<blockquote>
+<p>The constraint that determines the used values for these elements is:<br>‘left’ + ‘margin-left’ + ‘border-left-width’ + ‘padding-left’ + ‘width’ + ‘padding-right’ + ‘border-right-width’ + ‘margin-right’ + ‘right’ = width of containing block</p>
+</blockquote>
+<p>这句话说的是absolute性质的盒子，它的包含块的宽度等于它的盒模型的宽度 + left + right值，包含块的高度同理，盒模型包括margin-box、border-box、padding-box、content-box，而在这个居中方法中，.ele的left + right值是0，width是定值，width所在盒子包括了除了margin-box外的那三个box，margin都是auto值，按照上面那个公式，margin-left + margin-right的值应该等于包含块的宽度 - left的值 - right的值 - width的值，也就是说margin-left + margin-right的值等于除了width所占宽度外的剩下宽度，拥有剩下宽度后，就是平分其宽度，以让左右两边相等，达到居中，标准中给出了答案：</p>
+<blockquote>
+<p>If none of the three is ‘auto’: If both ‘margin-left’ and ‘margin-right’ are ‘auto’, solve the equation under the extra constraint that the two margins get equal values, unless this would make them negative, in which case when direction of the containing block is ‘ltr’ (‘rtl’), set ‘margin-left’ (‘margin-right’) to zero and solve for ‘margin-right’ (‘margin-left’)</p>
+</blockquote>
+<p>这里的”three”指的是left, width, right。如果left、right和width都不为auto，同时margin-left和margin-right都是auto，除非特别情况，它们俩就是相等的，而这个例子中不在特殊情况之列，因此两者平分，此时达到了水平居中。而对于垂直方向的margin的auto值的计算，标准中也有如下两句话，跟水平方向的同理(这里的“three”指的是“top, height, bottom”)：</p>
+<blockquote>
+<p>the used values of the vertical dimensions must satisfy this constraint:<br>‘top’ + ‘margin-top’ + ‘border-top-width’ + ‘padding-top’ + ‘height’ + ‘padding-bottom’ + ‘border-bottom-width’ + ‘margin-bottom’ + ‘bottom’ = height of containing block</p>
+<p>if none of the three are ‘auto’: If both ‘margin-top’ and ‘margin-bottom’ are ‘auto’, solve the equation under the extra constraint that the two margins get equal values.</p>
+</blockquote>
+<p>垂直方向也就因此也居中了。</p>
+<p>这种方法能简单的做到居中，但是必须有width和height值</p>
+<p><strong>适用于图片居中的网易nec的一个方法</strong></p>
+<p><a href="http://codepen.io/Dudy/pen/GJGzJr?editors=110" target="_blank" rel="external">DEMO链接</a></p>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;wrap&quot;&gt;</div><div class="line">  &lt;p&gt;</div><div class="line">    &lt;img src=&quot;http://nec.netease.com/img/s/1.jpg&quot; alt=&quot;&quot; /&gt;</div><div class="line">    &lt;img src=&quot;http://nec.netease.com/img/s/1.jpg&quot; alt=&quot;&quot; /&gt;</div><div class="line">  &lt;/p&gt;  </div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">html,body&#123;</div><div class="line">  width: 100%;</div><div class="line">  height: 100%;</div><div class="line">  margin: 0;</div><div class="line">&#125;</div><div class="line"></div><div class="line">.wrap&#123;</div><div class="line">  position:relative;</div><div class="line">  width: 100%;</div><div class="line">  height: 100%;</div><div class="line">  p&#123;</div><div class="line">    position:absolute;</div><div class="line">    left:50%;</div><div class="line">    top:50%;</div><div class="line">  &#125;</div><div class="line">  img&#123;</div><div class="line">    &amp;:nth-child(1)&#123;</div><div class="line">      position:static;</div><div class="line">      visibility:hidden;</div><div class="line">    &#125;</div><div class="line">    &amp;:nth-child(2)&#123;</div><div class="line">      position:absolute;</div><div class="line">      right:50%;</div><div class="line">      bottom:50%;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这种方法主要是利用了一个图片进行占位，以让父容器获得高宽，从而让进行-50%偏移的图片能有一个参照容器作百分比计算。优点是可以不知道图片的大小，随便放张尺寸不超过父容器的图片上去都能做到居中。另外，兼容性好，如果是不使用nth-child选择器的花，IE6都是能顺利兼容的</p>
+<h4 id="四-float布局上下文下的水平垂直居中"><a href="#四-float布局上下文下的水平垂直居中" class="headerlink" title="四. float布局上下文下的水平垂直居中"></a>四. float布局上下文下的水平垂直居中</h4><p><strong>float + -50%</strong></p>
+<p><a href="http://codepen.io/Dudy/pen/xGzjZa?editors=110" target="_blank" rel="external">DEMO链接</a></p>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;wrap&quot;&gt;</div><div class="line">  &lt;div class=&quot;ele&quot;&gt;</div><div class="line">    &lt;div class=&quot;ele-inner&quot;&gt;居中居中居中居中居中居中&lt;br&gt;居中居中居中居中居中居中居中居中居&lt;br&gt;中居中居中居中居中居中居中居中居中居&lt;br&gt;中居中居中居中居中居中居中&lt;/div&gt;</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">.wrap&#123;</div><div class="line">  float: left;</div><div class="line">  width: 100%;</div><div class="line">  height: 400px;</div><div class="line">  background-color: #ccc;</div><div class="line">  .ele&#123;</div><div class="line">    float: left;</div><div class="line">    position: relative;</div><div class="line">    left: 50%;</div><div class="line">    top: 50%;</div><div class="line">  &#125;</div><div class="line">  .ele-inner&#123;</div><div class="line">    position: relative;</div><div class="line">    left: -50%;</div><div class="line">    -webkit-transform : translate3d(0, -50%, 0);</div><div class="line">    transform : translate3d(0, -50%, 0);</div><div class="line">    background-color: #333;</div><div class="line">    color: #fff;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这种方法的原理，首先是利用float属性将需要居中的元素的父元素.ele的宽度收缩，然后left:50%将.ele的左边和水平中线对齐，这个时候还没居中，还需要将其往回拉自身宽度的50%，于是.ele-inner便是真正需要水平居中的元素，我给它一个position:relative，将其往回拉自身宽度50%就行了。对于垂直方向，依然是先将.ele top:50%到垂直方向中点，但是这时给.ele-inner top:50%是不起作用的，因为如果没给父元素明确高度的话，这个50%是计算不出来的，因此，就有了transform : translate3d(0, -50%, 0)。</p>
+<p>这种方法的好处是元素可以不定宽，任何时候都可以做到居中</p>
+<p>我当时在w3cplus的站上发现这个方法后，当时觉得这个方法很好，兼容性好，又还可以不定宽，但当我用了一段时间后，发现了一个问题：</p>
+<p>就是当居中元素的父元素left:50%时，如果元素宽度足够大，会超出外面的容器，而如果外面的容器又正好是overflow:auto的话，那就会在外面产生滚动条，问题DEMO链接<a href="http://codepen.io/Dudy/pen/vENMwr?editors=110" target="_blank" rel="external">在这里</a>，后来我找到了一个办法：<a href="http://codepen.io/Dudy/pen/YPWeYY?editors=110" target="_blank" rel="external">DEMO链接</a> ，基本思想就是利用元素超出父元素的左边不会产生滚动条的特性，有点奇淫技巧，但是能解决问题，有兴趣的可以看看</p>
+<p><strong>margin-bottom : -50%</strong></p>
+<p><a href="http://codepen.io/Dudy/pen/bdKMrB?editors=110" target="_blank" rel="external">DEMO链接</a></p>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;wrap&quot;&gt;</div><div class="line">  &lt;div class=&quot;placeholder&quot;&gt;&lt;/div&gt;</div><div class="line">  &lt;div class=&apos;content&apos;&gt;&lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">.wrap&#123;</div><div class="line">  float: left;</div><div class="line">  width: 100%;</div><div class="line">  height: 400px;</div><div class="line">  background-color: #ccc;</div><div class="line">  @contentHeight : 100px;</div><div class="line">  .placeholder&#123;</div><div class="line">    float: left;</div><div class="line">    width: 100%;</div><div class="line">    height: 50%;</div><div class="line">    /*居中元素.content高度一半*/</div><div class="line">    margin-bottom: -(@contentHeight / 2);</div><div class="line">  &#125;</div><div class="line">  .content&#123;</div><div class="line">    position: relative;</div><div class="line">    left: 50%;</div><div class="line">    transform:translate3d(-50%, 0, 0);</div><div class="line">    clear: both;</div><div class="line">    /*演示用，实际不需要定宽*/</div><div class="line">    max-width: 100px;</div><div class="line">    height: @contentHeight;</div><div class="line">    background-color: #333;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这种方法是先让占位元素.placeholder占据50%高度，然后给一个居中元素高度一半的负的margin-bottom，然后下面的元素只要跟着摆放就能垂直居中了。水平方向就是利用translate做偏移，这个没什么好说的，你也可以换成其他办法。</p>
+<p>这种方法就是各种固定死，首先最外层的父容器需要一个固定高度，以让.placeholder的height:50%有效，然后，margin-bottom也需要固定死，而且得需要知道居中元素高度。单纯就水平方向来说，这个方法比较适合需要兼容低版本IE的固定式布局的项目，因为兼容性好。</p>
+<h4 id="五-BFC布局上下文下的水平垂直居中"><a href="#五-BFC布局上下文下的水平垂直居中" class="headerlink" title="五.BFC布局上下文下的水平垂直居中"></a>五.BFC布局上下文下的水平垂直居中</h4><p>BFC的全称是块级排版上下文，这里有篇<a href="http://div.io/topic/834?page=1#3261" target="_blank" rel="external">文章</a>对齐进行了简单的介绍，BFC布局上下文下的布局其实就是利用盒模型本身进行的布局，前面在利用盒模型布局的那一节中已经讲过了，这里就不重复了</p>
+<h4 id="六-IFC布局上下文下的水平垂直居中"><a href="#六-IFC布局上下文下的水平垂直居中" class="headerlink" title="六.IFC布局上下文下的水平垂直居中"></a>六.IFC布局上下文下的水平垂直居中</h4><p>IFC又是个什么概念呢，你可以看看<a href="http://www.w3.org/TR/CSS21/visuren.html#inline-formatting" target="_blank" rel="external">官方文档</a>，也可以简单的理解为 display为inline性质的行级元素的布局。</p>
+<p><strong>text-align:center + vertical-align:middle</strong></p>
+<p><a href="http://codepen.io/Dudy/pen/pJKVZa?editors=110" target="_blank" rel="external">DEMO链接</a></p>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;wrap&quot;&gt;</div><div class="line">  &lt;div class=&apos;placeholder&apos;&gt;&lt;!--占位元素，用来作为居中元素的参照物--&gt;&lt;/div&gt;</div><div class="line">  &lt;div class=&quot;ele&quot;&gt;&lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">.wrap&#123;</div><div class="line">  width: 100%;</div><div class="line">  height: 400px;</div><div class="line">  /* min-height: 400px; */</div><div class="line">  text-align:center;</div><div class="line">  font-size: 0;</div><div class="line">  background-color: #ccc;</div><div class="line">  .placeholder,</div><div class="line">  .ele&#123;</div><div class="line">    vertical-align: middle;</div><div class="line">    display: inline-block;</div><div class="line">  &#125;</div><div class="line">  .placeholder&#123;</div><div class="line">    overflow: hidden;</div><div class="line">    width: 0;</div><div class="line">    min-height: inherit;</div><div class="line">    height: inherit;</div><div class="line">  &#125;</div><div class="line">  .ele&#123;</div><div class="line">    width: 100px;</div><div class="line">    height: 100px;</div><div class="line">    background-color: #333;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>行级元素会受到text-align和vertical-align的影响，关于vertical-align，不太好理解，我多贴几篇文章：<a href="http://www.html-js.com/article/2952" target="_blank" rel="external">@灵感idea 的</a>，<a href="http://www.zhangxinxu.com/wordpress/2010/05/我对css-vertical-align的一些理解与认识（一）/" target="_blank" rel="external">张鑫旭的</a>，<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/vertical-align" target="_blank" rel="external">MDN上的</a>，<a href="https://css-tricks.com/almanac/properties/v/vertical-align/" target="_blank" rel="external">css-trick上的</a>，以及<a href="http://www.w3.org/TR/CSS21/visudet.html#line-height" target="_blank" rel="external">官方文档</a>，这里首先是用text-center让inline-block水平居中，然后给一个vertical-align:middle，但是仅仅给vertical-align:middle是不够的，因为此时它还没有vertical-align对齐的参照物，所以就给了一个占位的inline-block，它的高度是100%。</p>
+<p>这个方法对于居中元素不需要定宽高，而且元素根据vertical-align值的不同不仅仅可以实现居中，还可以将其放在上面下面等。缺点是父元素需定高</p>
+<p><strong>text-align:center + line-height</strong></p>
+<p><a href="http://codepen.io/Dudy/pen/ZGRmqL?editors=110" target="_blank" rel="external">DEMO链接</a></p>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;wrap&quot;&gt;</div><div class="line">  &lt;div class=&quot;ele&quot;&gt;居中居中居中居中居中居中&lt;br&gt;居中居中居中居中居中居中居中&lt;br&gt;居中居中居中居中居中居中居中居中&lt;br&gt;居中居中居中居中居中居中居中居中&lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">.wrap&#123;</div><div class="line">  text-align: center;</div><div class="line">  line-height: 400px;</div><div class="line"></div><div class="line">  width: 100%;</div><div class="line">  height: 400px;</div><div class="line">  background-color: #ccc;</div><div class="line">  font-size: 0;</div><div class="line">  .ele&#123;</div><div class="line">    line-height: normal;</div><div class="line">    vertical-align: middle;</div><div class="line">    display: inline-block;</div><div class="line">    background-color: #333;</div><div class="line">    font-size: 18px;</div><div class="line">    color: #fff;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个方法，首先是水平方向，text-align:center就行了，至于垂直方向，起作用的就是父容器的一个line-height和居中元素的vertical-align:middle，为什么这两个属性可以让一个inline-block垂直居中呢，这里重点是父容器在其下面产生了一个隐匿的文本节点，这个我在上面 text-align:center + absolute 那个方法的讲解中说到过了，然后这个这个隐匿文本节点会因line-height属性的作用而拥有了一个父容器一样高的行高，此时元素有了一个vertical-align对齐的参照物，再给其vertical-align:middle值就能垂直对齐了。</p>
+<p>使用这个方法，居中元素无需定宽高，但缺点是得给父容器一个固定的行高才行。</p>
+<p><strong>text-align:center + font-size</strong></p>
+<p><a href="http://codepen.io/Dudy/pen/vOrvBP?editors=110" target="_blank" rel="external">DEMO链接</a></p>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;wrap&quot;&gt;</div><div class="line">  &lt;div class=&quot;ele&quot;&gt;&lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">.wrap&#123;</div><div class="line">  text-align: center;</div><div class="line">  font-size: 400px * 0.873;/*约为高度的0.873*/</div><div class="line"></div><div class="line">  margin-left: auto;</div><div class="line">  margin-right: auto;</div><div class="line">  width: 400px;</div><div class="line">  height: 400px;</div><div class="line">  background-color: #ccc;</div><div class="line">  .ele&#123;</div><div class="line">    vertical-align: middle;</div><div class="line"></div><div class="line">    width: 100px;</div><div class="line">    height: 100px;</div><div class="line">    display: inline-block;</div><div class="line">    background-color: #333;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个方法来自淘宝，基本原理还是让隐匿文本节点所占据的行高等于父容器的高度，然后给居中元素一个vertical-align:middle对齐的一个参照。只是这里把定义line-height值换成了定义font-size值，让font-siz足够大从而让其行高等于父容器高度。为了证明这个font-size的作用，我把居中元素换成文本</p>
+<p><a href="http://codepen.io/Dudy/pen/JdZwGa?editors=110" target="_blank" rel="external">DEMO链接</a></p>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;wrap&quot;&gt;</div><div class="line">  a</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">.wrap&#123;</div><div class="line">  text-align: center;</div><div class="line">  font-size: 400px * 0.873;/*约为高度的0.873*/</div><div class="line"></div><div class="line">  margin-left: auto;</div><div class="line">  margin-right: auto;</div><div class="line">  width: 400px;</div><div class="line">  height: 400px;</div><div class="line">  background-color: #ccc;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>效果：</p>
+<p><img src="http://img.souche.com/20160316/png/12de8abcbfff3671be67c69f4353273a.png" alt="alt"></p>
+<p>可以看到字母a垂直居中了，这个字母a就对应那个隐匿文本节点</p>
+<h4 id="七-FFC布局上下文下的水平垂直居中"><a href="#七-FFC布局上下文下的水平垂直居中" class="headerlink" title="七.FFC布局上下文下的水平垂直居中"></a>七.FFC布局上下文下的水平垂直居中</h4><p><strong>父元素、子元素都定义flex：</strong></p>
+<p><a href="http://codepen.io/Dudy/pen/PqaXOZ?editors=110" target="_blank" rel="external">DEMO链接</a></p>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;wrap&quot;&gt;</div><div class="line">  &lt;div class=&quot;ele&quot;&gt;</div><div class="line">  居中居中居中居中居中居中居中&lt;br&gt;</div><div class="line">    居中居中居中居中居中居中居中&lt;br&gt;</div><div class="line">    居中居中居中居中居中居中居中&lt;br&gt;</div><div class="line">    居中居中居中居中居中居中居中&lt;br&gt;</div><div class="line">    居中居中居中居中居中居中居中</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">html,body&#123;</div><div class="line">  width: 100%;</div><div class="line">  height: 100%;</div><div class="line">&#125;</div><div class="line"></div><div class="line">.wrap&#123;</div><div class="line">  display: flex;</div><div class="line"> align-items: center;</div><div class="line">  justify-content: center;</div><div class="line">  width: 100%;</div><div class="line">  height: 100%;</div><div class="line">  background-color: #ccc;</div><div class="line">  .ele&#123;</div><div class="line">    background-color: #333;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>只有父元素定义flex，子元素定义margin:auto：</strong></p>
+<p><a href="http://codepen.io/Dudy/pen/zGLzRN?editors=110" target="_blank" rel="external">DEMO链接</a></p>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;wrap&quot;&gt;</div><div class="line">  &lt;div class=&quot;ele&quot;&gt;</div><div class="line">  居中居中居中居中居中居中居中&lt;br&gt;</div><div class="line">    居中居中居中居中居中居中居中&lt;br&gt;</div><div class="line">    居中居中居中居中居中居中居中&lt;br&gt;</div><div class="line">    居中居中居中居中居中居中居中&lt;br&gt;</div><div class="line">    居中居中居中居中居中居中居中</div><div class="line">  &lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">html,body&#123;</div><div class="line">  width: 100%;</div><div class="line">  height: 100%;</div><div class="line">&#125;</div><div class="line"></div><div class="line">.wrap&#123;</div><div class="line">  display: flex;</div><div class="line">  width: 100%;</div><div class="line">  height: 100%;</div><div class="line">  background-color: #ccc;</div><div class="line">  .ele&#123;</div><div class="line">    margin:auto;</div><div class="line">    background-color: #333;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>flex box的标准中有这句话(参考链接:<a href="http://www.w3.org/TR/css-flexbox-1/#item-margins" target="_blank" rel="external">http://www.w3.org/TR/css-flexbox-1/#item-margins</a>):</p>
+<blockquote>
+<p>The margins of adjacent flex items do not collapse. Auto margins absorb extra space in the corresponding dimension and can be used for alignment and to push adjacent flex items apart; see Aligning with auto margins.</p>
+</blockquote>
+<p>意思就是说flex item的margin不会折叠，在flex-item有明确大小并且margin:auto时外边距吸收了伸缩包含块下的额外的空间，并且能被用于居中以及会让其相邻的flex item尽可能的往这个flex item所在的那一个方向靠。</p>
+<p>flexbox是个很强大的布局模块，也就三个属性就搞定居中了，而且不论父容器还是居中元素都可以不定宽高。参考链接：<a href="http://www.w3cplus.com/css3/a-visual-guide-to-css3-flexbox-properties.html" target="_blank" rel="external">图解CSS3 Flexbox属性</a></p>
+<h4 id="八-table布局上下文下的水平垂直居中"><a href="#八-table布局上下文下的水平垂直居中" class="headerlink" title="八.table布局上下文下的水平垂直居中"></a>八.table布局上下文下的水平垂直居中</h4><p><a href="http://codepen.io/Dudy/pen/EjRGRO?editors=110" target="_blank" rel="external">DEMO链接</a></p>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&apos;wrap&apos;&gt;</div><div class="line">    &lt;div class=&apos;ele&apos;&gt;</div><div class="line">      &lt;div class=&quot;ele-inner&quot;&gt;居中居中居中居中居中居中居中居中&lt;br&gt;居中居中居中居中居中居中居中居中&lt;br&gt;居中居中居中居中居中居中居中居中居中居中&lt;/div&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">.wrap&#123;</div><div class="line">  width: 100%;</div><div class="line">  height: 300px;</div><div class="line">  display: table;</div><div class="line">  background-color: #ccc;</div><div class="line">&#125;</div><div class="line">.ele&#123;</div><div class="line">  text-align:center;</div><div class="line">  vertical-align: middle;</div><div class="line">  display:table-cell;</div><div class="line">&#125;				</div><div class="line"></div><div class="line">.ele-inner&#123;</div><div class="line">  display: inline-block;</div><div class="line">  background-color: #333;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>原理就是把div模拟成表格（换成真正的表格标签也是可以的），然后给那几个属性就成了，这个没什么好讲的，不懂的去翻翻手册就明白了，然后<a href="http://weibo.com/u/2945647940?topnav=1&amp;wvr=6&amp;topsug=1" target="_blank" rel="external">@于江水</a>写的一篇<a href="http://yujiangshui.com/about-table/" target="_blank" rel="external">table那些事</a>还不错</p>
+<h4 id="九-CSS-grid布局上下文下的水平垂直居中"><a href="#九-CSS-grid布局上下文下的水平垂直居中" class="headerlink" title="九.CSS grid布局上下文下的水平垂直居中"></a>九.CSS grid布局上下文下的水平垂直居中</h4><p>CSS3 grid layout是IE搞出来的一个布局模块，目前貌似还只有IE0和IE11支持，我没有研究过其居中的方法，有兴趣的可以看看<a href="http://www.w3cplus.com/blog/tags/356.html" target="_blank" rel="external">大漠老师的介绍文章</a></p>
+<h4 id="十-其它未知归属的水平垂直居中方法"><a href="#十-其它未知归属的水平垂直居中方法" class="headerlink" title="十.其它未知归属的水平垂直居中方法"></a>十.其它未知归属的水平垂直居中方法</h4><p><strong>使用button标签</strong></p>
+<p><a href="http://codepen.io/Dudy/pen/aOKPgr?editors=110" target="_blank" rel="external">DEMO链接</a></p>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;button&gt;</div><div class="line">  &lt;div&gt;</div><div class="line">    居中居中居中居中居中居中&lt;br&gt;</div><div class="line">    居中居中居中居中居中居中&lt;br&gt;</div><div class="line">    居中居中居中居中居中居中&lt;br&gt;</div><div class="line">    居中居中居中居中居中居中&lt;br&gt;</div><div class="line">  &lt;/div&gt;  </div><div class="line">&lt;/button&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">button&#123;</div><div class="line">  width: 100%;</div><div class="line">  height: 400px;</div><div class="line">  background-color: #cccccc;</div><div class="line">  border-width:0;</div><div class="line">  &amp;:focus&#123;</div><div class="line">    outline:none;</div><div class="line">  &#125;</div><div class="line">  div&#123;</div><div class="line">    display: inline-block;</div><div class="line">    font-size: 18px;</div><div class="line">    background-color: #333;</div><div class="line">    color: #fff;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这种方法属于奇淫技巧，利用button标签天生外挂的这一技能对其里面的元素进行居中。</p>
+<p><strong>（本文完）</strong></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;对一个元素水平垂直居中，在我们的工作中是会经常遇到的，也是CSS布局中很重要的一部分，本文就来讲讲CSS水平垂直居中的一些方法。另外，文中的css都是用less书写的，如果看不懂less，可以把我给的demo链接打开，然后在控制台中查看最终的css，或者是点击codepen
+    
+    </summary>
+    
+      <category term="Web开发" scheme="http://qinyebo.com/categories/Web%E5%BC%80%E5%8F%91/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>什么是BFC</title>
+    <link href="http://qinyebo.com/2016/10/09/%E4%BB%80%E4%B9%88%E6%98%AFBFC/"/>
+    <id>http://qinyebo.com/2016/10/09/什么是BFC/</id>
+    <published>2016-10-09T13:14:29.000Z</published>
+    <updated>2016-10-09T13:16:52.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>这是我10个月前写的一篇关于BFC的文章，因为接下来要写一篇关于FFC的文章了，然而很多人对BFC都还不了解，所以我先把这篇文章拿出来让大家先了解下BFC。</p>
+<p>说到BFC，就会涉及到CSS布局的一些基本概念，然后，首先来讲一下关于块级盒的一些概念：</p>
+<p>下面是来自w3.org中的一句话(参考链接:<a href="http://www.w3.org/TR/CSS2/visuren.html#block-formatting)：" target="_blank" rel="external">http://www.w3.org/TR/CSS2/visuren.html#block-formatting)：</a></p>
+<blockquote>
+<p>Block-level elements are those elements of the source document that are formatted visually as blocks (e.g., paragraphs). The                             following values of the ‘display’ property make an element block-level: ‘block’, ‘list-item’, and ‘table’.</p>
+</blockquote>
+<p>大概的意思是块级元素是那种源文档被格式化为可视块了的元素，然后使这个元素变成块级元素的display属性取值如下： ‘block’, ‘list-item’, 和 ‘table’。</p>
+<p>然后还有一段话：</p>
+<blockquote>
+<p>Block-level boxes are boxes that participate in a block formatting context. Each block-level element generates a principal block-level box that contains descendant boxes and generated content and is also the box involved in any positioning scheme</p>
+</blockquote>
+<p>块级盒block-level box是这种参与了块级排版上下文的一种盒子，每个块级元素都生成了一个包含后代盒子和生成的内容的主要块级盒，并且这个盒子参与了任何定位的计算</p>
+<p>来自w3c官网的一张图：</p>
+<p><img src="http://www.w3.org/TR/css3-box/box.png" alt="Alt text"></p>
+<p>块级元素会自动生成一个块级盒block-level box，这是块级盒block-level-box的盒模型构成，它表明的是块级盒自身的结构构成。再来看w3.org的这样一段话( 参考:<a href="http://www.w3.org/TR/CSS2/box.html)：" target="_blank" rel="external">http://www.w3.org/TR/CSS2/box.html)：</a></p>
+<blockquote>
+<p><strong>content edge or inner edge</strong><br>The content edge surrounds the rectangle given by the width and height of the box, which often depend on the element’s rendered content. The four content edges define the box’s content box.<br><strong>padding edge</strong><br>The padding edge surrounds the box padding. If the padding has 0 width, the padding edge is the same as the content edge. The four padding edges define the box’s padding box.<br><strong>border edge</strong><br>The border edge surrounds the box’s border. If the border has 0 width, the border edge is the same as the padding edge. The four border edges define the box’s border box.<br><strong>margin edge or outer edge</strong><br>The margin edge surrounds the box margin. If the margin has 0 width, the margin edge is the same as the border edge. The four margin edges define the box’s margin box.</p>
+</blockquote>
+<p>从上面这段话可以看出，margin、border、padding、content分别定义了元素四种边，然后每种类型的边的四条边定义了一个盒子，分别是content box、padding box、border box、margin box，而决定块盒在包含块中与相邻块盒的垂直间距的便是margin-box，这个margin-box是始终存在的，即使它的margin为0，试看下面的代码：</p>
+<pre><code>&lt;div style=&quot;width: 400px;height: 400px; background:#ff4400;&quot;&gt;&lt;/div&gt;
+</code></pre><p>生成了一个块级的元素，同时元素也生成了一个块级盒：</p>
+<p><img src="http://img.souche.com/20160316/png/c7b552bf9d7f4372a083d571983b0ba2.png" alt="Alt text"></p>
+<p>此时我没有为这个div设置margin值，但是这个div还是有一个默认为0的margin的，试看下面的浏览器生成的computed style：</p>
+<p><img src="http://img.souche.com/20160316/png/5febfc094430a23338f34422a382f3ac.png" alt="Alt text"></p>
+<p>可以看到div默认的margin为0，再看看w3.org的相关文档(参考:<a href="http://www.w3.org/TR/WD-CSS2/visudet.html)：" target="_blank" rel="external">http://www.w3.org/TR/WD-CSS2/visudet.html)：</a></p>
+<p><img src="http://img.souche.com/20160316/png/eeac123675ad9966e9837f140848f7fc.png" alt="Alt text"></p>
+<p>上面说了元素的四个margin的默认值都是0(见红色部分)，然后应用对象是所有的元素(见蓝色部分)，所有元素当然包括块级元素，因此所有的块级盒子无论怎样都会有一个margin-box，在BFC中，margin-box会与其相邻的margin-box的对边相折叠(关于BFC的margin折叠这里先不讨论)。margin-box是参与块级盒在上下文中的布局的，但是参与BFC布局的盒子却是块级盒block-level box，并且还有一点需要明确的是参与布局的是盒子而不是元素本身。下面这张图是我自己理解的块级盒block-level box的构成：</p>
+<p><img src="http://img.souche.com/20160316/png/93a4055545278d504a8add63bc0883bf.png" alt="Alt text"></p>
+<p>那么block-level box在页面中是怎样布局的呢。</p>
+<p>我们通常的描述是这样的：</p>
+<blockquote>
+<p>普通流中的块元素独占一行，然后从上往下一个接一个的排布，相邻元素间会有外边距折叠</p>
+</blockquote>
+<p>确实是这样(NOTE：这个说法也非绝对严谨，试看DEMO:<a href="http://codepen.io/Dudy/pen/mywXKb" target="_blank" rel="external">http://codepen.io/Dudy/pen/mywXKb</a>，那为什么会这样呢，原因就是因为BFC的存在。试看下面的关于BFC的官方文档描述(参考:<a href="http://www.w3.org/TR/CSS21/visuren.html)：" target="_blank" rel="external">http://www.w3.org/TR/CSS21/visuren.html)：</a></p>
+<blockquote>
+<p>Floats, absolutely positioned elements, block containers (such as inline-blocks, table-cells, and table-captions) that are not block boxes, and block boxes with ‘overflow’ other than ‘visible’ (except when that value has been propagated to the viewport) establish new block formatting contexts for their contents.</p>
+<p>In a block formatting context, boxes are laid out one after the other, vertically, beginning at the top of a containing block. The vertical distance between two sibling boxes is determined by the ‘margin’ properties. Vertical margins between adjacent block-level boxes in a block formatting context collapse.</p>
+<p>In a block formatting context, each box’s left outer edge touches the left edge of the containing block (for right-to-left formatting, right edges touch). This is true even in the presence of floats (although a box’s line boxes may shrink due to the floats), unless the box establishes a new block formatting context (in which case the box itself may become narrower due to the floats).</p>
+</blockquote>
+<p>大致意思如下：<br><strong>第一段：</strong>浮动元素、绝对定位元素，不是块级盒的块级包含块(比如inline-block、table-cell、table-capation)和overflow值不为visible的块级盒子为它们的内容建立了一个新的块级排版上下文。</p>
+<p><strong>第二段：</strong>在一个块级排版上下文中，盒子是从包含块顶部开始，垂直的一个接一个的排列的，相邻两个盒子之间的垂直的间距是被margin属性所决定的，在一个块级排版上下文中相邻的两个块级盒之间的垂直margin是折叠的。参与BFC的布局的只有普通流normal flow中的块级盒，而float、position值不为relative\static的元素是脱离BFC这一布局环境的，不参与BFC的布局</p>
+<p><strong>第三段：</strong>在一个块级排版上下文中，每个盒子的左外边是触碰到包含块的左边的（对于从右向左的排版，则相反），即使在有浮动元素参与的情况下也是如此(即使一个盒子的行盒是因为浮动而收缩了的)，除非这个盒子新建了一个块级排版上下文(在某些情况下这个盒子自身会因为floats而变窄)。</p>
+<p>先不解释第一段所描述的内容，先看第二段和第三段话，然后我们再来看一个很常见的实例：<br>  代码如下：</p>
+<pre><code>&lt;div style=&quot;width: 200px;height: 200px;background: #cccccc;&quot;&gt;&lt;/div&gt;
+&lt;div style=&quot;width: 200px;height: 200px;background: #333333;&quot;&gt;&lt;/div&gt;
+&lt;div style=&quot;width: 200px;height: 200px;background: #666666;&quot;&gt;&lt;/div&gt;
+</code></pre><p>  结果如下：<br><img src="http://img.souche.com/20160316/png/d4d0c2b6dd25362a575cce13fdca1d70.png" alt="Alt text"></p>
+<p>三个块级盒，从上往下排列，看样子是遵循如上面第二段所述的这一条BFC布局规则的：“在一个块级排版上下文中，盒子是从包含块顶部开始，垂直的一个接一个的排列的”，那么这里的盒子要从上往下排列的话，肯定是得要一个包含块containing block和一个块级排版上下文BFC的，根元素(:root)是会在其下创建一个BFC的，那么在这个BFC下的所有块级盒都是会在它的包含块中垂直的一个接一个的排布的。但是元素的包含块是什么呢，试看来自w3.org的一段话(参考:<a href="http://www.w3.org/TR/CSS2/visudet.html)：" target="_blank" rel="external">http://www.w3.org/TR/CSS2/visudet.html)：</a></p>
+<blockquote>
+<p>The position and size of an element’s box(es) are sometimes calculated relative to a certain rectangle, called the containing block of the element:</p>
+</blockquote>
+<p>意思是：元素盒子的位置和尺寸往往是根据一个矩形计算出来的，我们称这个矩形为元素的包含块<br>然后它下面还有一句：</p>
+<blockquote>
+<p>if the element’s position is ‘relative’ or ‘static’, the containing block is formed by the content edge of the nearest block container ancestor box.</p>
+</blockquote>
+<p>意思是：如果这个元素的position值是relative或static，这个元素的包含块是由离其最近的块级的祖先盒子的内容的边content-edge构成的。就是离其最近的块级祖先盒子的content-box。</p>
+<p>搞清了包含块containing block的概念，再来看看这个实例中的3个div的包含块，很显然是其父级元素body，同时还在canvas所设立的BFC下，按照“在一个块级排版上下文中，盒子是从包含块顶部开始，垂直的一个接一个的排列的”的这个定义，我们已经确定了，这里的div是会垂直的一个接一个的排列的，但是你要注意到，第二段话只是定义了垂直方向的排布规则，还没说水平方向的，那么水平方向的又如何呢，试看第三段话的前两句：“在一个块级排版上下文中，每个盒子的左外边是触碰到包含块的左边的（对于从右向左的排版，则相反）”，而在这里，我尚未为其定义从右向左的排版(对于从右向左的排版，参考:<a href="http://www.css88.com/book/css/properties/writing-modes/index.htm" target="_blank" rel="external">http://www.css88.com/book/css/properties/writing-modes/index.htm</a>，所以这个div的左外边是会触碰到包含块body的左边的。</p>
+<p>本文只讨论什么是BFC，因此上面那段话中的某些原文就不一 一解释了。</p>
+<p>再来看上面那段话第二段中的一句话：“相邻两个盒子之间的垂直的间距是被margin属性所决定的，在一个块级排版上下文中相邻的两个块级盒之间的垂直margin是折叠的”，这是参与BFC布局的块级盒的又一特性，试看以下实例：</p>
+<p>  代码：</p>
+<pre><code>&lt;div style=&quot;width: 200px;height: 200px;background: #cccccc;margin-bottom: 30px;&quot;&gt;&lt;/div&gt;
+&lt;div style=&quot;width: 200px;height: 200px;background: #333333;margin-top: 30px;margin-bottom:30px;&quot;&gt;    &lt;/div&gt;
+&lt;div style=&quot;width: 200px;height: 200px;background: #666666;margin-top: 50px;&quot;&gt;&lt;/div&gt;
+</code></pre><p>  如图：</p>
+<p>  <img src="http://img.souche.com/20160316/png/9831174ac0139090cd9199539e009031.png" alt="alt text"></p>
+<p>可以看到上下两个div的margin折叠了，第一个div的margin-bottom和第二个div的margin-top折叠为了30px，第二个div的margin-bottom和第三个div的margin-top折叠为了50px，而这个折叠本质是块级盒block-level box下的margin-box的折叠，后面会讲到如果再到这几个div的外面一层再包裹一个拥有BFC的元素的话，他们之间的margin便不会折叠了，因为BFC里面的盒子和其外面的盒子间是不会有任何影响的，你可能会疑惑那这里的三个div不是也在根盒子所设立的BFC下吗，那为什么还会折叠，原因很简单，就是因为你那个BFC在根盒子那里去了，BFC相当于一堵墙，你这个墙在这里应该在每个div的外面才会起到隔离这几个div的作用啊，而根元素下的那个BFC则是隔离的根盒子下的直接子盒子了。关于margin折叠方面的还有很多细节，可以参考官方文档：<a href="http://www.w3.org/TR/CSS2/box.html#collapsing-margins" target="_blank" rel="external">http://www.w3.org/TR/CSS2/box.html#collapsing-margins</a></p>
+<p>至此，我们就搞清楚普通流中的块级盒的一些基本特性的来龙去脉了。</p>
+<p>上面说的都是根元素下的BFC。那么，假设你在不知道比如float的这些特性能用于创建BFC的时候，你会不会去想根元素下的盒子会不会也有可以用于创建BFC的方法与对应的盒子呢？上下文套上下文可是一件很令人感到愉悦的事情，因为我可以把那个能创建BFC的盒子当作那个根盒子，而这个创建了BFC的盒子则是一个独立的容器，里面的参与BFC的块级盒不会影响到盒子外面的盒子，外面的盒子也不会影响到里面参与了BFC的块级盒。试看以下demo：<br>&amp;nbsp:;&amp;nbsp:;代码如下：</p>
+<pre><code>&lt;div style=&quot;overflow: auto;width: 100%;&quot;&gt;
+    &lt;div style=&quot;float: left;width: 100%;&quot;&gt;
+        &lt;div style=&quot;margin-bottom: 30px;width: 100px;height: 100px;background-color: #cccccc;&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div style=&quot;float: left;width: 100%;&quot;&gt;
+        &lt;div style=&quot;margin-top: 50px;width: 100px;height: 100px;background-color: #333333;&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre><p>&amp;nbsp:;&amp;nbsp:;结果如下：</p>
+<p><img src="http://img.souche.com/20160316/png/e9143e8b604922d09e159af57338d581.png" alt="Alt text"></p>
+<p>可以看到，上面示例中的上面灰色div和下面黑色div的margin并没有重叠，这是因为那两个float的父盒子在为它下面的盒子创建了一个BFC，从而将float盒子里面的子盒子给隔离了起来，因此也就不会margin折叠了，这只是创建BFC的一个方法，其它的还有overflow:hidden等，而在这个BFC下的盒子都是遵循BFC的布局规则的。</p>
+<p>然后我们来从盒模型的角度来理解下，BFC是如何将其下的盒子与外界隔离起来的，首先，最基本的盒子构成我们上面已经说过了，见上面的描述block-level box的构成的那张图：</p>
+<p>然后，当块级盒block-level box外层没有BFC作保护，有margin折叠时，是这样的：</p>
+<p><img src="http://img.souche.com/20160316/png/e18d6ef7e3c91f7ca8c45af63364f741.png" alt="Alt text"></p>
+<p>而当块级盒block-level box外层有BFC作保护时(比如给下图灰色边框线盒子一个float:left)，则是这样的：</p>
+<p><img src="http://img.souche.com/20160316/png/d71ec345ec10580bc0f1b3652de6d987.png" alt="Alt text"></p>
+<p>同时BFC下的盒子是按照BFC的规则从上往下一个接一个的排列，并且存在外边距折叠的，你可以通过在这层BFC下再去嵌套BFC来阻止下面盒子的外边距折叠</p>
+<p><img src="http://img.souche.com/20160316/png/cbdd180714b7d7f5bf686d5aa912f9e6.png" alt="Alt text"></p>
+<p>最后，我们通过一张图来了解一个页面中的BFC的构成(有红色虚线的代表的是拥有BFC的元素)：</p>
+<p><img src="http://img.souche.com/20160316/jpg/e481d1c259c90e67a32830bc4bd56365.jpg" alt="Alt text"></p>
+<p>BFC描述的是页面中的一个布局上下文，它下面的盒子遵循BFC中的布局规则，它是描述的是块级盒的布局规则，那么行盒，行级盒等盒子又是遵循什么样的布局规则的呢？这里就不细讲了，可以看看winter老师的两张图，有助于对BFC的理解，也有助于对CSS布局的理解：</p>
+<p><img src="http://img.souche.com/20160316/png/75f94274a6a7095538eb10cbd18eb4a8.png" alt="Alt text"></p>
+<p><img src="http://img.souche.com/20160316/jpg/0ef8af8446215be4fc14c31e8f459b4c.jpg" alt="Alt text"></p>
+<p>最后要说的就是，本文只对BFC作了一个初步的介绍，如果要了解更多的细节，可以参考以下相关标准：</p>
+<p><a href="http://www.w3.org/TR/CSS2/box.html" target="_blank" rel="external">http://www.w3.org/TR/CSS2/box.html</a><br><a href="http://www.w3.org/TR/CSS2/visuren.html#block-formatting" target="_blank" rel="external">http://www.w3.org/TR/CSS2/visuren.html#block-formatting</a><br><a href="http://www.w3.org/TR/CSS2/box.html#collapsing-margins" target="_blank" rel="external">http://www.w3.org/TR/CSS2/box.html#collapsing-margins</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;这是我10个月前写的一篇关于BFC的文章，因为接下来要写一篇关于FFC的文章了，然而很多人对BFC都还不了解，所以我先把这篇文章拿出来让大家先了解下BFC。&lt;/p&gt;
+&lt;p&gt;说到BFC，就会涉及到CSS布局的一些基本概念，然后，首先来讲一下关于块级盒的一些概念：&lt;/p&gt;
+&lt;p
+    
+    </summary>
+    
+      <category term="Web开发" scheme="http://qinyebo.com/categories/Web%E5%BC%80%E5%8F%91/"/>
+    
+    
+  </entry>
+  
+</feed>
