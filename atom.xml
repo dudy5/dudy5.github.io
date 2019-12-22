@@ -208,42 +208,6 @@
   </entry>
   
   <entry>
-    <title>道德经与软件工程</title>
-    <link href="http://qinyebo.com/2016/11/23/%E9%81%93%E5%BE%B7%E7%BB%8F%E4%B8%8E%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/"/>
-    <id>http://qinyebo.com/2016/11/23/道德经与软件工程/</id>
-    <published>2016-11-22T22:54:31.000Z</published>
-    <updated>2016-11-22T22:54:31.000Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>俗语批疑新解</title>
-    <link href="http://qinyebo.com/2016/10/26/%E4%BF%97%E8%AF%AD%E6%89%B9%E7%96%91%E6%96%B0%E8%A7%A3/"/>
-    <id>http://qinyebo.com/2016/10/26/俗语批疑新解/</id>
-    <published>2016-10-26T06:12:45.000Z</published>
-    <updated>2019-12-22T04:06:02.504Z</updated>
-    
-    <content type="html"><![CDATA[<p>以下为我对日常的一些俗语词汇的怀疑、考证与研究，阐述我对它的理解，每有一怀疑，便记录之，不定时更新测试测试测试20191222-2</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;以下为我对日常的一些俗语词汇的怀疑、考证与研究，阐述我对它的理解，每有一怀疑，便记录之，不定时更新测试测试测试20191222-2&lt;/p&gt;
-
-    
-    </summary>
-    
-    
-      <category term="语文" scheme="http://qinyebo.com/tags/%E8%AF%AD%E6%96%87/"/>
-    
-  </entry>
-  
-  <entry>
     <title>健身运动与举重运动</title>
     <link href="http://qinyebo.com/2016/10/10/%E5%81%A5%E8%BA%AB%E8%BF%90%E5%8A%A8%E4%B8%8E%E4%B8%BE%E9%87%8D%E8%BF%90%E5%8A%A8/"/>
     <id>http://qinyebo.com/2016/10/10/健身运动与举重运动/</id>
@@ -308,49 +272,6 @@
     
       &lt;h2 id=&quot;传统同步IO&quot;&gt;&lt;a href=&quot;#传统同步IO&quot; class=&quot;headerlink&quot; title=&quot;传统同步IO&quot;&gt;&lt;/a&gt;传统同步IO&lt;/h2&gt;&lt;p&gt;传统同步IO会阻塞当前线程后续所有代码的执行，等IO请求完成后才会交还当前线程的执行权&lt;/p&gt;
 &lt;h2 id
-    
-    </summary>
-    
-      <category term="Web开发" scheme="http://qinyebo.com/categories/Web%E5%BC%80%E5%8F%91/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>移动端高清多屏适配</title>
-    <link href="http://qinyebo.com/2016/10/09/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E9%AB%98%E6%B8%85%E5%A4%9A%E5%B1%8F%E9%80%82%E9%85%8D/"/>
-    <id>http://qinyebo.com/2016/10/09/移动端高清多屏适配/</id>
-    <published>2016-10-09T13:29:19.000Z</published>
-    <updated>2016-10-09T13:33:31.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>移动端的适配问题分两类，一类是高清适配，一类是布局适配</p>
-<p>高清适配解决的是1px问题，布局适配解决的是元素在不同设备上的布局问题</p>
-<h2 id="1px问题"><a href="#1px问题" class="headerlink" title="1px问题"></a>1px问题</h2><h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案 :"></a>解决方案 :</h4><ol>
-<li>自定义背景图linear-gradient模拟</li>
-<li>border-image模拟</li>
-<li>box-shadow模拟</li>
-<li>transform:scale缩放</li>
-<li>ios8以上支持0.5px</li>
-<li>倍数px加viewport缩放法 : initial-scale:0.5或其它值 + 二倍或多倍CSS像素</li>
-<li>面向px加viewport缩放法 : initial-scale:0.5或其它值 + meta头指定width=理想视口宽度二倍或多倍</li>
-</ol>
-<h2 id="布局适配问题"><a href="#布局适配问题" class="headerlink" title="布局适配问题"></a>布局适配问题</h2><p>布局适配问题是独立于1px问题的，就是只考虑布局，假设1px问题已经OK</p>
-<h4 id="解决方案-1"><a href="#解决方案-1" class="headerlink" title="解决方案"></a>解决方案</h4><ol>
-<li>百分比 + 固定像素</li>
-<li>flexbox + 固定像素 / flexbox + rem</li>
-<li>纯REM =&gt; 宽度rem + 高度auto / 定高</li>
-<li>固定宽度 + 动态viewport法(1px问题基于面向px加viewport缩放法)</li>
-<li>rem宽度 + 动态viewport法(1px问题基于倍数px加viewport缩放法，只不过这个倍数px是由rem计算出来的)</li>
-</ol>
-<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><p>跟淘宝flexible的原理一样，viewport动态去生成，让CSS像素和物理像素一致，解决1px问题，然后这时元素应该放大相应的倍数让它和没有缩小viewport时的大小一致，这个px倍数的放大手动去管理显然不合适，所以就用rem去管理。这样既能在多端做到布局适配，也解决了1px问题。</p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://github.com/riskers/blog/issues/17" target="_blank" rel="external">https://github.com/riskers/blog/issues/17</a><br><a href="https://github.com/riskers/blog/issues/18" target="_blank" rel="external">https://github.com/riskers/blog/issues/18</a><br><a href="http://efe.baidu.com/blog/1px-on-retina/" target="_blank" rel="external">http://efe.baidu.com/blog/1px-on-retina/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;移动端的适配问题分两类，一类是高清适配，一类是布局适配&lt;/p&gt;
-&lt;p&gt;高清适配解决的是1px问题，布局适配解决的是元素在不同设备上的布局问题&lt;/p&gt;
-&lt;h2 id=&quot;1px问题&quot;&gt;&lt;a href=&quot;#1px问题&quot; class=&quot;headerlink&quot; title=&quot;1px问
     
     </summary>
     

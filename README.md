@@ -12,4 +12,18 @@ https://beeant0512.github.io/2016/03/21/duoshuo-embed-1458569563555/index.html
 
 原始判断代码：ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
 
-## 20191222 将duoshuo.swig全部代码使用{# #}语法注释 ##
+# 修改记录
+
+1. 20191222 将duoshuo.swig全部代码使用{# #}语法注释
+
+# 目录说明
+
+_config.yml	配置文件
+
+public	生成的静态文件，这个目录最终会发布到服务器
+
+scaffolds	一些通用的markdown模板
+
+source	编写的markdown文件，_drafts草稿文件，_posts发布的文章
+
+themes	博客的模板
