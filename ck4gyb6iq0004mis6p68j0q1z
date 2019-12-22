@@ -91,7 +91,7 @@
 下面是来自w3.org中的一句话(参考链接:http://www.w3.org/TR/CSS2/visuren.html#block-formattin">
 <meta property="og:type" content="article">
 <meta property="og:title" content="什么是BFC">
-<meta property="og:url" content="http://qinyebo.com/2016/10/09/undefined/undefined">
+<meta property="og:url" content="http://qinyebo.com/ck4gyb6iq0004mis6p68j0q1z">
 <meta property="og:site_name" content="大地Dudy的个人博客">
 <meta property="og:description" content="这是我10个月前写的一篇关于BFC的文章，因为接下来要写一篇关于FFC的文章了，然而很多人对BFC都还不了解，所以我先把这篇文章拿出来让大家先了解下BFC。
 说到BFC，就会涉及到CSS布局的一些基本概念，然后，首先来讲一下关于块级盒的一些概念：
@@ -137,7 +137,7 @@
 
 
 
-  <link rel="canonical" href="http://qinyebo.com/2016/10/09/undefined/undefined"/>
+  <link rel="canonical" href="http://qinyebo.com/ck4gyb6iq0004mis6p68j0q1z"/>
 
 
   <title> 什么是BFC | 大地Dudy的个人博客 </title>
@@ -314,8 +314,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/10/09/undefined/undefined#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/09/undefined/undefined" itemprop="commentsCount"></span>
+                <a href="/ck4gyb6iq0004mis6p68j0q1z#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="ck4gyb6iq0004mis6p68j0q1z" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -460,7 +460,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/10/09/undefined/undefined" rel="prev" title="无线端性能优化">
+              <a href="/ck4gyb6io0003mis6lah11adq" rel="prev" title="无线端性能优化">
                 无线端性能优化 <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -477,10 +477,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2016/10/09/undefined/undefined"
+        <div class="ds-share flat" data-thread-key="ck4gyb6iq0004mis6p68j0q1z"
      data-title="什么是BFC"
      data-content=""
-     data-url="http://qinyebo.com/2016/10/09/undefined/undefined">
+     data-url="http://qinyebo.com/ck4gyb6iq0004mis6p68j0q1z">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -504,8 +504,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/10/09/undefined/undefined"
-           data-title="什么是BFC" data-url="http://qinyebo.com/2016/10/09/undefined/undefined">
+      <div class="ds-thread" data-thread-key="ck4gyb6iq0004mis6p68j0q1z"
+           data-title="什么是BFC" data-url="http://qinyebo.com/ck4gyb6iq0004mis6p68j0q1z">
       </div>
     
   </div>
