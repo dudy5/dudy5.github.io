@@ -86,33 +86,22 @@
 
 
 
-<meta name="description" content="在我以前的世界观中，国富民强、世界人民共同富裕，才是这个世界所应该追求的，但在最近一年的时间中，我的思想逐步发生了很多变化，产生了很多更开放的思想。
-前不久在知乎上看到一个人对问题“为什么中国在很多领域都要求自主研发”的回答中说到了一句：
-
-奥巴马说假如中国人都过上了美国的日子，地球资源满足不了，不太妥。但是说，假如中国人都吃饱了滋润了，很多欧美日韩就再难躺着过滋润日子倒是一点不假。
-
-进一步说，">
+<meta name="description" content="传统同步IO传统同步IO会阻塞当前线程后续所有代码的执行，等IO请求完成后才会交还当前线程的执行权
+传统异步IO异步IO则是在一个线程下发起一个IO请求，然后再不断的去询问它完成没有或者等待它完成，完成了则返回一个文件描述符，然后再通过这个文件描述符将数据取回来。这种异步IO虽然可以在前一个询问与下一个询问的间隙执行一些当前线程的任务，但这种轮询询问也是很耗费CPU资源与浪费当前线程的时间的。
+理">
 <meta property="og:type" content="article">
-<meta property="og:title" content="理想中的开源世界">
-<meta property="og:url" content="http://qinyebo.com/ck4gylx1o0005yws6o435tx5w/index.html">
+<meta property="og:title" content="NodeJS中的异步IO是怎么来的">
+<meta property="og:url" content="http://qinyebo.com/ck4h56db70000hys6c26b2rjn/index.html">
 <meta property="og:site_name" content="大地Dudy的个人博客">
-<meta property="og:description" content="在我以前的世界观中，国富民强、世界人民共同富裕，才是这个世界所应该追求的，但在最近一年的时间中，我的思想逐步发生了很多变化，产生了很多更开放的思想。
-前不久在知乎上看到一个人对问题“为什么中国在很多领域都要求自主研发”的回答中说到了一句：
-
-奥巴马说假如中国人都过上了美国的日子，地球资源满足不了，不太妥。但是说，假如中国人都吃饱了滋润了，很多欧美日韩就再难躺着过滋润日子倒是一点不假。
-
-进一步说，">
-<meta property="og:image" content="http://qinyebo.com/images/1AEE5E01-3ACD-4948-889B-2671C7C46375.png">
-<meta property="og:updated_time" content="2019-12-22T11:39:21.019Z">
+<meta property="og:description" content="传统同步IO传统同步IO会阻塞当前线程后续所有代码的执行，等IO请求完成后才会交还当前线程的执行权
+传统异步IO异步IO则是在一个线程下发起一个IO请求，然后再不断的去询问它完成没有或者等待它完成，完成了则返回一个文件描述符，然后再通过这个文件描述符将数据取回来。这种异步IO虽然可以在前一个询问与下一个询问的间隙执行一些当前线程的任务，但这种轮询询问也是很耗费CPU资源与浪费当前线程的时间的。
+理">
+<meta property="og:updated_time" content="2016-10-09T13:33:03.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="理想中的开源世界">
-<meta name="twitter:description" content="在我以前的世界观中，国富民强、世界人民共同富裕，才是这个世界所应该追求的，但在最近一年的时间中，我的思想逐步发生了很多变化，产生了很多更开放的思想。
-前不久在知乎上看到一个人对问题“为什么中国在很多领域都要求自主研发”的回答中说到了一句：
-
-奥巴马说假如中国人都过上了美国的日子，地球资源满足不了，不太妥。但是说，假如中国人都吃饱了滋润了，很多欧美日韩就再难躺着过滋润日子倒是一点不假。
-
-进一步说，">
-<meta name="twitter:image" content="http://qinyebo.com/images/1AEE5E01-3ACD-4948-889B-2671C7C46375.png">
+<meta name="twitter:title" content="NodeJS中的异步IO是怎么来的">
+<meta name="twitter:description" content="传统同步IO传统同步IO会阻塞当前线程后续所有代码的执行，等IO请求完成后才会交还当前线程的执行权
+传统异步IO异步IO则是在一个线程下发起一个IO请求，然后再不断的去询问它完成没有或者等待它完成，完成了则返回一个文件描述符，然后再通过这个文件描述符将数据取回来。这种异步IO虽然可以在前一个询问与下一个询问的间隙执行一些当前线程的任务，但这种轮询询问也是很耗费CPU资源与浪费当前线程的时间的。
+理">
 
 
 
@@ -133,10 +122,10 @@
 
 
 
-  <link rel="canonical" href="http://qinyebo.com/ck4gylx1o0005yws6o435tx5w/"/>
+  <link rel="canonical" href="http://qinyebo.com/ck4h56db70000hys6c26b2rjn/"/>
 
 
-  <title> 理想中的开源世界 | 大地Dudy的个人博客 </title>
+  <title> NodeJS中的异步IO是怎么来的 | 大地Dudy的个人博客 </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -268,7 +257,7 @@
             
             
               
-                理想中的开源世界
+                NodeJS中的异步IO是怎么来的
               
             
           </h1>
@@ -280,8 +269,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2019-12-22T14:21:00+08:00" content="2019-12-22">
-              2019-12-22
+            <time itemprop="dateCreated" datetime="2016-10-09T21:31:22+08:00" content="2016-10-09">
+              2016-10-09
             </time>
           </span>
 
@@ -294,8 +283,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/开源安全可控/" itemprop="url" rel="index">
-                    <span itemprop="name">开源安全可控</span>
+                  <a href="/categories/Web开发/" itemprop="url" rel="index">
+                    <span itemprop="name">Web开发</span>
                   </a>
                 </span>
 
@@ -310,8 +299,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/ck4gylx1o0005yws6o435tx5w/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="ck4gylx1o0005yws6o435tx5w/" itemprop="commentsCount"></span>
+                <a href="/ck4h56db70000hys6c26b2rjn/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="ck4h56db70000hys6c26b2rjn/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -334,51 +323,12 @@
       
 
       
-        <p>在我以前的世界观中，国富民强、世界人民共同富裕，才是这个世界所应该追求的，但在最近一年的时间中，<br>我的思想逐步发生了很多变化，产生了很多更开放的思想。</p>
-<p>前不久在知乎上看到一个人对问题“为什么中国在很多领域都要求自主研发”的回答中说到了一句：</p>
-<blockquote>
-<p>奥巴马说假如中国人都过上了美国的日子，地球资源满足不了，不太妥。但是说，假如中国人都吃饱了滋润了，很多欧美日韩就再难躺着过滋润日子倒是一点不假。</p>
-</blockquote>
-<p>进一步说，世界资源其实是有限的，假设中国发展成了世界第一强国，以中国的人口数量，会消耗掉地球太多的资源，这样就会导致两个结果：</p>
-<ol>
-<li>强国变弱。因为资源的争夺，可能导致战争</li>
-<li>弱国变得更多；原本的弱国变得更加弱。这样可能比弱国强的国家对弱国的入侵，引发战争</li>
-</ol>
-<p>这两点都是会破坏世界和平的，甚至有比较大概率会导致世界大战。所以，中国成为世界第一大国是一件很危险的事情。那美国呢，美国继续强大也对世界和平有影响，刀枪在手，难免不动手，某个危险的美国的领导人是可能会做出影响世界和平的战争决策的。总的来说，一个国家的强大都有其风险所在，平衡各个国家的利益，达到平均的适当的富裕，才能让这个世界长久和平，但是理想是丰满的，现实是骨感的，平均的富裕是不可能的，只能是一部分国家比较富裕，另一部分国家依然不富裕，适当的有富人有穷人，才能保证地球资源分配的均衡，但是这一点其实也很难以掌控的，要控制这个平衡，我们要持续做几件事：</p>
-<ol>
-<li>帮助穷人/穷国，让穷人/穷国适当的富裕起来</li>
-<li>减缓可能过渡富裕的国家/人的继续富裕</li>
-<li>遏制富国/人的继续富裕</li>
-<li>防范相对富国对相对弱国的敌对行为</li>
-<li>提高相对弱国的国防水平，防范相对富国的打击</li>
-<li>防范同一意识形态国家之间的结盟</li>
-</ol>
-<p>以上所说，其实核心思想就是，中心化是不被提倡的，去中心化才是我们应该所追求的。</p>
-<p>我们国家最近两年受中美贸易战影响，极力的提倡自主可控，习主席也提出了国产化替代的目标，然而，开源软件已逐步成为软件开发主流，平均每个软件工程开源代码覆盖率已达57%以上，且开源软件往往还是一个软件工程中的核心代码部分，比如现代前端应用大多数都是构建于Vue或React之上的，离开了Vue或React，只能回到前端开发的刀耕火种时代，很难去开发一个现代前端应用，因此开源软件对于现代软件工程来说是非常的不可或缺的。所以，纯国产化替代是会降低软件的水平的，应该去积极的使用开源。</p>
-<p>但仅使用开源还不够，做软件开发的都知道，现代最大的开源社区是美国的github，在之前，美国曾经对github的伊朗用户实施过封锁：<br><img src="/images/1AEE5E01-3ACD-4948-889B-2671C7C46375.png" alt="Alt text"><br>而一个去中心化的github则可以规避这种问题。在区块链技术中，核心技术之一便是去中心化，一个区块链由非常多的区块所组成，每个区块里都存储有分布的数据，要想改变区块的数据，必须大多数区块达成共识，才能去改变，因此是不存在中心化的控制的，我在google上搜索了一下去中心化的开源社区，找到了两个：</p>
-<ul>
-<li><a href="http://gitchain.org" target="_blank" rel="external">http://gitchain.org</a></li>
-<li><a href="https://blog.printf.net/articles/2015/05/29/announcing-gittorrent-a-decentralized-github/" target="_blank" rel="external">https://blog.printf.net/articles/2015/05/29/announcing-gittorrent-a-decentralized-github/</a></li>
-</ul>
-<p>但是这两个项目都是好几年没更新了，可能是没找到对应的应用场景。而对于政府来说，是存在这种需求的，防止出现类似github之伊朗事件一样的国家安全事件，完全可以说是国家安全事件，要知道现代软件可都是建构于开源软件之上的。</p>
-<p>但是，去中心化的github还只解决了主权国对开源社区平台的控制，那代码呢，这块我没有搜到相关的将代码去中心化的方式，但是理论上来说，将代码去中心化存储是可以做到的，因为风险只来自于国家政府对代码的更改，所以将代码去中心化存储后，就解决了代码中心化所带来的风险。然而还存在一个问题，就是开源软件所依赖的第三方代码，并不是所有的第三方代码都是对应开源社区的，还存在一些外部的代码，对于这种，是无法使用区块链技术解决的，但是，可以有对应的用于容灾的备份数据，这样虽然无法保证最好的用户体验，但至少在被封锁后仍然是可用的。</p>
-<p>因此，一个去中心化的github就是这样的：</p>
-<ul>
-<li>平台所有的代码存储在各节点上，且不存在一个开源项目的代码存储在低于50%的节点上</li>
-<li>对于非平台的第三方代码，存储用于容灾的备份数据，同样，这些备份数据也是存在于各节点上的</li>
-</ul>
-<p>去中心化的github有了，开源项目本身不会受控制了，但开源项目代码本身还是存在代码安全问题的，对于代码安全，则是采用开源安全相关的代码静态检测技术和成分检测技术解决，这又是另一个话题。</p>
-<p>因此，真正的自主可控，不是规避开源，而是积极拥抱开源，在拥抱开源的基础上做好开源安全可控工作。总结一下，<strong>要实现国家所说的自主可控，而又不影响软件业水平，应该是这样几个策略</strong>：</p>
-<ol>
-<li>建立一个去中心化的开源平台，实现开源软件的可控</li>
-<li>建立一个强大的开源安全检测平台，实现开源软件的安全</li>
-</ol>
-<p>有了如何去实现自主可控的方案，还要考虑其可实现性，在可实现性上，还存在几个问题：</p>
-<ol>
-<li>政府部门目前对自主可控还存在一个定义，就是使用国产的软件，一旦有什么问题，可以自主更改</li>
-<li>平台出来了，推广有两种途径，一种是走政府端，在中国，一般的官员，除非他觉得你的项目能给他升职加官，否则很难买你的单，这种产品跟国家自主可控的理念是违背的，自然没什么当官的买单；第二种是走C端，走C端的话，就像一个创业社交产品之于微信一样，没有足够的社交链、足够的开源项目在上面，是很难留存的，而这样一个产品对于广大开发者来说，开源项目是否安全可控，其实是不重要的，也就没什么需求，所以走C端也是很难的</li>
-</ol>
-<p>对于可自主更改的问题，软件业的经验表明，大多数情况下，问题都能得到有效解决（缺乏数据），而且有问题也是可以提PR的。对于推广的问题，在国内基本是无解的。</p>
+        <h2 id="传统同步IO"><a href="#传统同步IO" class="headerlink" title="传统同步IO"></a>传统同步IO</h2><p>传统同步IO会阻塞当前线程后续所有代码的执行，等IO请求完成后才会交还当前线程的执行权</p>
+<h2 id="传统异步IO"><a href="#传统异步IO" class="headerlink" title="传统异步IO"></a>传统异步IO</h2><p>异步IO则是在一个线程下发起一个IO请求，然后再不断的去询问它完成没有或者等待它完成，完成了则返回一个文件描述符，然后再通过这个文件描述符将数据取回来。这种异步IO虽然可以在前一个询问与下一个询问的间隙执行一些当前线程的任务，但这种轮询询问也是很耗费CPU资源与浪费当前线程的时间的。</p>
+<h2 id="理想中的异步IO"><a href="#理想中的异步IO" class="headerlink" title="理想中的异步IO"></a>理想中的异步IO</h2><p>当前线程发起一个IO请求，并带上一个回调函数过去，然后当前线程转而去处理其它事情，等请求完成后，回调函数被调起，数据经由回调函数被传入进来。</p>
+<h2 id="如何实现像理想中的异步IO一样的效果"><a href="#如何实现像理想中的异步IO一样的效果" class="headerlink" title="如何实现像理想中的异步IO一样的效果"></a>如何实现像理想中的异步IO一样的效果</h2><p>当前线程只负责发起请求，然后当前线程去处理其它任务，由另一个线程去等待请求完成，按照传统异步IO的方式去做，然后请求完成后这个IO线程再通知主线程，并将数据传给主线程。</p>
+<h2 id="NodeJS中如何实现理想中的异步IO"><a href="#NodeJS中如何实现理想中的异步IO" class="headerlink" title="NodeJS中如何实现理想中的异步IO"></a>NodeJS中如何实现理想中的异步IO</h2><p>主线程发起一个IO请求，IO线程收到后将此请求插入IO线程池，等待执行，执行IO请求的IO线程通过libuv调用不同平台的IO请求处理者发起真正的IO请求，按照传统异步IO的方式完成IO请求后，因为Node中有个事件循环的东西，事件循环有个IO观察者，这个IO观察者会循环查询线程池中是否有执行完的请求，如果有，则把相应请求对象放入一个事件队列，那个IO线程则重归线程池，然后主线程在其执行的间隙，会查询事件队列中是否有待执行的事件，如果有，则排队依次执行，执行的过程就是调起主线程之前订阅好的回调函数，同时将请求对象里的数据塞入回调函数，回调函数得到执行，主线程得以收到响应数据。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>Javascript虽然是单线程的，但浏览器和Node是多线程的，所以得以有机会实现理想中的异步IO，其它语言也能实现这种理想中的异步IO，只不过在Javascript中的IO线程所占的CPU资源少，所以高并发无压力。</p>
 
       
     </div>
@@ -404,13 +354,17 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/ck4gylx2p000gyws68ay9mjyq/" rel="next" title="解读CSS布局之-水平垂直居中">
-                <i class="fa fa-chevron-left"></i> 解读CSS布局之-水平垂直居中
+              <a href="/ck4h56dbb0002hys61zlf7pjx/" rel="next" title="无线端性能优化">
+                <i class="fa fa-chevron-left"></i> 无线端性能优化
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/ck4h56dcd000ghys6xyfxbfra/" rel="prev" title="健身运动与举重运动">
+                健身运动与举重运动 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -425,10 +379,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="ck4gylx1o0005yws6o435tx5w/"
-     data-title="理想中的开源世界"
+        <div class="ds-share flat" data-thread-key="ck4h56db70000hys6c26b2rjn/"
+     data-title="NodeJS中的异步IO是怎么来的"
      data-content=""
-     data-url="http://qinyebo.com/ck4gylx1o0005yws6o435tx5w/">
+     data-url="http://qinyebo.com/ck4h56db70000hys6c26b2rjn/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -452,8 +406,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="ck4gylx1o0005yws6o435tx5w/"
-           data-title="理想中的开源世界" data-url="http://qinyebo.com/ck4gylx1o0005yws6o435tx5w/">
+      <div class="ds-thread" data-thread-key="ck4h56db70000hys6c26b2rjn/"
+           data-title="NodeJS中的异步IO是怎么来的" data-url="http://qinyebo.com/ck4h56db70000hys6c26b2rjn/">
       </div>
     
   </div>
@@ -598,7 +552,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#传统同步IO"><span class="nav-number">1.</span> <span class="nav-text">传统同步IO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#传统异步IO"><span class="nav-number">2.</span> <span class="nav-text">传统异步IO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#理想中的异步IO"><span class="nav-number">3.</span> <span class="nav-text">理想中的异步IO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何实现像理想中的异步IO一样的效果"><span class="nav-number">4.</span> <span class="nav-text">如何实现像理想中的异步IO一样的效果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NodeJS中如何实现理想中的异步IO"><span class="nav-number">5.</span> <span class="nav-text">NodeJS中如何实现理想中的异步IO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">6.</span> <span class="nav-text">小结</span></a></li></ol></div>
             
           </div>
         </section>
