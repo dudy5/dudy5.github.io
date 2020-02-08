@@ -14,6 +14,9 @@ https://beeant0512.github.io/2016/03/21/duoshuo-embed-1458569563555/index.html
 
 原始判断代码：ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
 
+*本博客用的valine评论插卡*
+添加评论教程：https://www.jianshu.com/p/938fc79c7371
+
 # 修改记录
 
 1. 20191222 将duoshuo.swig全部代码使用{# #}语法注释
