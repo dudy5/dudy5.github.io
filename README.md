@@ -2,7 +2,7 @@
 
 发布博客：hexo clean => hexo deploy
 
-新建文章：hexo new [layout] <title>，也可以直接在_drafts或_posts直接新建文件
+新建文章：hexo new [layout] <title>（例：hexo new post 什么是BFC），也可以直接在_drafts或_posts直接新建文件
 
 本地访问：hexo server
 
